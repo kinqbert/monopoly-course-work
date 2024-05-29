@@ -3,27 +3,25 @@ using System;
 public static class Dice
 {
     private static readonly Random Random = new Random();
+    private static readonly int[] CurrentValues = {0, 0};
     
-    public static int[] RollDiceInts(int numberOfDice = 2)
+    public static int[] RollDiceInts()
     {
-        var result = new int[numberOfDice];
-
-        for (var i = 0; i < numberOfDice; i++)
+        for (var i = 0; i < 2; i++)
         {
-            result[i] = RollDice();
+            CurrentValues[i] = Random.Next(1, 7);
         }
 
-        return result;
-    }
-    
-    public static int RollDice()
-    {
-        return Random.Next(1, 7);
+        return CurrentValues;
     }
     
     public static bool IsDouble()
     {
-        var dice = RollDiceInts(2);
-        return dice[0] == dice[1];
+        return CurrentValues[0] == CurrentValues[1];
+    }
+
+    public static int[] GetCurrentValues()
+    {
+        return CurrentValues;
     }
 }

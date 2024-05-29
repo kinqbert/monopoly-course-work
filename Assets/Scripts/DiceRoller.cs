@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class DiceRoller : MonoBehaviour
 {
-    public Sprite[] DiceImage;
+    public Sprite[] diceImage;
+    private int[] currentValues = {0, 0};
     
     // Start is called before the first frame update
     void Start()
@@ -21,15 +23,20 @@ public class DiceRoller : MonoBehaviour
 
     public void RollTheDice()
     {
-        int[] diceRolls = Dice.RollDiceInts(); // using Dice class static methods from labs 
-        Debug.Log("Rolled: " + diceRolls[0] + " and " + diceRolls[1] + ". Total: " + (diceRolls[0] + diceRolls[1]));
+        currentValues = Dice.RollDiceInts(); // using Dice class static methods from labs 
+        Debug.Log("Rolled: " + currentValues[0] + " and " + currentValues[1] + ". Total: " + (currentValues[0] + currentValues[1]));
 
         if (Dice.IsDouble())
         {
             Debug.Log("Rolled a double!");
         }
 
-        this.transform.GetChild(0).GetComponent<Image>().sprite = DiceImage[diceRolls[0] - 1]; // updating first dice image
-        this.transform.GetChild(1).GetComponent<Image>().sprite = DiceImage[diceRolls[1] - 1]; // updating second dice image
+        transform.GetChild(0).GetComponent<Image>().sprite = diceImage[currentValues[0] - 1]; // updating first dice image
+        transform.GetChild(1).GetComponent<Image>().sprite = diceImage[currentValues[1] - 1]; // updating second dice image
+    }
+    
+    public int[] GetCurrentValues()
+    {
+        return currentValues;
     }
 }
