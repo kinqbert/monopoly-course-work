@@ -7,26 +7,36 @@ public class DiceRoller : MonoBehaviour
     public Sprite[] diceImage;
     private int[] _currentValues = {0, 0};
     public float animationDuration = 1.5f; // duration of the dice roll animation
-    private bool isRolling = false;
-    
+    private bool _doneRolling = true;
+    private bool _isFirstRoll = true;
+
     private Image _diceImage1;
     private Image _diceImage2;
+    private Button _rollButton;
 
     void Start()
     {
         // saving references to the dice images
         _diceImage1 = transform.GetChild(0).GetComponent<Image>();
         _diceImage2 = transform.GetChild(1).GetComponent<Image>();
+
+        // finding the Roll button in the scene
+        _rollButton = GameObject.Find("RollDice-Button").GetComponent<Button>();
     }
 
     public void RollTheDice()
     {
-        StartCoroutine(RollDiceAnimation());
+        if (_doneRolling)
+        {
+            StartCoroutine(RollDiceAnimation());
+        }
     }
 
     private IEnumerator RollDiceAnimation()
     {
-        isRolling = true;
+        _isFirstRoll = false;
+        _doneRolling = false;
+        _rollButton.interactable = false; // Disable the Roll button
         float elapsed = 0.0f;
         while (elapsed < animationDuration)
         {
@@ -39,7 +49,8 @@ public class DiceRoller : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null; // wait for the next frame
         }
-        isRolling = false;
+        _doneRolling = true;
+        _rollButton.interactable = true; // Enable the Roll button
         
         _currentValues = Dice.RollDiceInts();
         _diceImage1.sprite = diceImage[_currentValues[0] - 1];
@@ -50,9 +61,14 @@ public class DiceRoller : MonoBehaviour
     {
         return _currentValues;
     }
-    
-    public bool GetIsRolling()
+
+    public bool GetDoneRolling()
     {
-        return isRolling;
+        return _doneRolling;
+    }
+
+    public bool IsFirstRoll()
+    {
+        return _isFirstRoll;
     }
 }
