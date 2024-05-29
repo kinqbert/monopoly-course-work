@@ -4,7 +4,7 @@ public static class Dice
 {
     private static readonly Random Random = new Random();
     
-    public static int[] RollDiceInts(int numberOfDice)
+    public static int[] RollDiceInts(int numberOfDice = 2)
     {
         var result = new int[numberOfDice];
 
@@ -18,7 +18,7 @@ public static class Dice
     
     public static int RollDice()
     {
-        return Random.Next(1, 13);
+        return Random.Next(1, 7);
     }
     
     public static bool IsDouble()
