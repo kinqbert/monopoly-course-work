@@ -1,42 +1,58 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class DiceRoller : MonoBehaviour
 {
     public Sprite[] diceImage;
-    private int[] currentValues = {0, 0};
+    private int[] _currentValues = {0, 0};
+    public float animationDuration = 1.5f; // duration of the dice roll animation
+    private bool isRolling = false;
     
-    // Start is called before the first frame update
+    private Image _diceImage1;
+    private Image _diceImage2;
+
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // saving references to the dice images
+        _diceImage1 = transform.GetChild(0).GetComponent<Image>();
+        _diceImage2 = transform.GetChild(1).GetComponent<Image>();
     }
 
     public void RollTheDice()
     {
-        currentValues = Dice.RollDiceInts(); // using Dice class static methods from labs 
-        Debug.Log("Rolled: " + currentValues[0] + " and " + currentValues[1] + ". Total: " + (currentValues[0] + currentValues[1]));
-
-        if (Dice.IsDouble())
-        {
-            Debug.Log("Rolled a double!");
-        }
-
-        transform.GetChild(0).GetComponent<Image>().sprite = diceImage[currentValues[0] - 1]; // updating first dice image
-        transform.GetChild(1).GetComponent<Image>().sprite = diceImage[currentValues[1] - 1]; // updating second dice image
+        StartCoroutine(RollDiceAnimation());
     }
-    
+
+    private IEnumerator RollDiceAnimation()
+    {
+        isRolling = true;
+        float elapsed = 0.0f;
+        while (elapsed < animationDuration)
+        {
+            int randomIndex1 = Random.Range(0, diceImage.Length);
+            int randomIndex2 = Random.Range(0, diceImage.Length);
+
+            _diceImage1.sprite = diceImage[randomIndex1];
+            _diceImage2.sprite = diceImage[randomIndex2];
+
+            elapsed += Time.deltaTime;
+            yield return null; // wait for the next frame
+        }
+        isRolling = false;
+        
+        _currentValues = Dice.RollDiceInts();
+        _diceImage1.sprite = diceImage[_currentValues[0] - 1];
+        _diceImage2.sprite = diceImage[_currentValues[1] - 1];
+    }
+
     public int[] GetCurrentValues()
     {
-        return currentValues;
+        return _currentValues;
+    }
+    
+    public bool GetIsRolling()
+    {
+        return isRolling;
     }
 }

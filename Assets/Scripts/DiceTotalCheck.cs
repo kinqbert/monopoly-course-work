@@ -18,7 +18,14 @@ public class DiceTotalCheck : MonoBehaviour
     void Update()
     {
         int[] currentValues = _diceRoller.GetCurrentValues();
-
-        GetComponent<TextMeshProUGUI>().text = (currentValues[0] + currentValues[1]).ToString();
+        
+        if (_diceRoller.GetIsRolling())
+        {
+            GetComponent<TextMeshProUGUI>().text = "";
+        }
+        else
+        {
+            GetComponent<TextMeshProUGUI>().text = (currentValues[0] + currentValues[1]).ToString();
+        }
     }
 }
