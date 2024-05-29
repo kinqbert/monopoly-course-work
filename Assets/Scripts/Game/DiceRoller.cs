@@ -16,11 +16,11 @@ public class DiceRoller : MonoBehaviour
 
     void Start()
     {
-        // saving references to the dice images
+        // Saving references to the dice images
         _diceImage1 = transform.GetChild(0).GetComponent<Image>();
         _diceImage2 = transform.GetChild(1).GetComponent<Image>();
 
-        // finding the Roll button in the scene
+        // Finding the Roll button in the scene
         _rollButton = GameObject.Find("RollDice-Button").GetComponent<Button>();
     }
 
@@ -72,3 +72,5 @@ public class DiceRoller : MonoBehaviour
         return _isFirstRoll;
     }
 }
+
+
