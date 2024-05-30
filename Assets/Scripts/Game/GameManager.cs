@@ -33,10 +33,10 @@ namespace Game
             _currentPlayer = _players[_currentPlayerIndex];
 
             _dice = GameObject.Find("DiceManager").GetComponent<Dice>();
+            _dice.OnDiceRollComplete = OnDiceRollComplete; // Subscribe to the dice roll complete event
 
             _isGameOver = false;
-            _isDiceRolled = false;
-            
+
             rollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>(); // finding the button
             rollButton.onClick.AddListener(RollDice); // RollDice will be called when the button is clicked
         }
@@ -54,11 +54,6 @@ namespace Game
             {
                 RollDice();
             }
-            
-            if (_isDiceRolled)
-            {
-                _currentPlayer.Move(_dice.GetTotal());
-            }
         }
 
         public void RollDice()
@@ -66,12 +61,18 @@ namespace Game
             _dice.RollTheDice();
         }
 
+        private void OnDiceRollComplete()
+        {
+            Debug.Log("Current player: " + _currentPlayer.Name);
+            _currentPlayer.Move(_dice.GetTotal());
+            EndTurn();
+        }
+
         // Call this method after the player completes their turn
         private void EndTurn()
         {
             _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
             _currentPlayer = _players[_currentPlayerIndex];
-            _isDiceRolled = false; // Reset the flag for the next player
         }
     }
 }

@@ -19,6 +19,8 @@ namespace Game
         private Button _rollButton;
 
         private static readonly System.Random Random = new System.Random();
+        
+        public Action OnDiceRollComplete; // Add this action
 
         void Start()
         {
@@ -63,6 +65,8 @@ namespace Game
 
             _doneRolling = true;
             _rollButton.interactable = true; // enabling the Roll button again
+            
+            OnDiceRollComplete?.Invoke(); // Call the completion action
         }
 
         private int[] RollDiceInts()
