@@ -36,8 +36,9 @@ public class DiceRoller : MonoBehaviour
     {
         _isFirstRoll = false;
         _doneRolling = false;
-        _rollButton.interactable = false; // Disable the Roll button
-        float elapsed = 0.0f;
+        _rollButton.interactable = false; // disabling the Roll button
+        
+        float elapsed = 0.0f; // time elapsed from the start of the animation
         while (elapsed < animationDuration)
         {
             int randomIndex1 = Random.Range(0, diceImage.Length);
@@ -50,10 +51,10 @@ public class DiceRoller : MonoBehaviour
             yield return null; // wait for the next frame
         }
         _doneRolling = true;
-        _rollButton.interactable = true; // Enable the Roll button
+        _rollButton.interactable = true; // enabling the Roll button again
         
-        _currentValues = Dice.RollDiceInts();
-        _diceImage1.sprite = diceImage[_currentValues[0] - 1];
+        _currentValues = Dice.RollDiceInts(); // getting final value of the dice roll
+        _diceImage1.sprite = diceImage[_currentValues[0] - 1]; // setting the final dice image 1
         _diceImage2.sprite = diceImage[_currentValues[1] - 1];
     }
 
