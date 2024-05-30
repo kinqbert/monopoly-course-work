@@ -6,22 +6,23 @@ using TMPro;
 
 public class DiceTotalCheck : MonoBehaviour
 {
-    private DiceRoller _diceRoller;
+    private Dice _dice;
     
     private TextMeshProUGUI _diceTotalText;
     
     // Start is called before the first frame update
     void Start()
     {
-        _diceRoller = FindObjectOfType<DiceRoller>();
+        _dice = GameObject.Find("DiceManager").GetComponent<Dice>();
+        _diceTotalText = GameObject.Find("Dice Total Text").GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        int[] currentValues = _diceRoller.GetCurrentValues();
+        int[] currentValues = _dice.GetCurrentValues();
         
-        if (_diceRoller.GetDoneRolling() && !_diceRoller.IsFirstRoll())
+        if (_dice.GetDoneRolling() && !_dice.IsFirstRoll())
         {
             _diceTotalText.text = (currentValues[0] + currentValues[1]).ToString();
         }

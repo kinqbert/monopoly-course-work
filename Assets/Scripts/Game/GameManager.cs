@@ -7,18 +7,16 @@ namespace Game
 {
     public class GameManager : MonoBehaviour
     {
-        private static GameManager _instance;
         private Board.Board _gameBoard;
 
         private List<GameParticipant> _players;
         private int _currentPlayerIndex;
         private GameParticipant _currentPlayer;
 
-        private bool _isDiceRolled;
-        private DiceRoller _diceRoller;
+        private Dice _dice;
 
+        private bool _isDiceRolled;
         private bool _isGameOver;
-        private bool _isMoving;
 
         public Button rollButton;
 
@@ -34,9 +32,10 @@ namespace Game
             _currentPlayerIndex = 0;
             _currentPlayer = _players[_currentPlayerIndex];
 
-            _diceRoller = FindObjectOfType<DiceRoller>();
+            _dice = GameObject.Find("DiceManager").GetComponent<Dice>();
 
             _isGameOver = false;
+            _isDiceRolled = false;
             
             rollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>(); // finding the button
             rollButton.onClick.AddListener(RollDice); // RollDice will be called when the button is clicked
@@ -44,16 +43,35 @@ namespace Game
 
         void Update()
         {
+            if (_isGameOver)
+            {
+                // handle game over state
+                return;
+            }
+            
             // RollDice will be called when the space key is pressed
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && !_isDiceRolled)
             {
                 RollDice();
+            }
+            
+            if (_isDiceRolled)
+            {
+                _currentPlayer.Move(_dice.GetTotal());
             }
         }
 
         public void RollDice()
         {
-            _diceRoller.RollTheDice();
+            _dice.RollTheDice();
+        }
+
+        // Call this method after the player completes their turn
+        private void EndTurn()
+        {
+            _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
+            _currentPlayer = _players[_currentPlayerIndex];
+            _isDiceRolled = false; // Reset the flag for the next player
         }
     }
 }
