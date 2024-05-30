@@ -2,76 +2,78 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DiceRoller : MonoBehaviour
+namespace Game
 {
-    public Sprite[] diceImage;
-    private int[] _currentValues = {0, 0};
-    public float animationDuration = 1.5f; // duration of the dice roll animation
-    private bool _doneRolling = true;
-    private bool _isFirstRoll = true;
-
-    private Image _diceImage1;
-    private Image _diceImage2;
-    private Button _rollButton;
-
-    void Start()
+    public class DiceRoller : MonoBehaviour
     {
-        // Saving references to the dice images
-        _diceImage1 = transform.GetChild(0).GetComponent<Image>();
-        _diceImage2 = transform.GetChild(1).GetComponent<Image>();
+        public Sprite[] diceImage;
+        private int[] _currentValues = { 0, 0 };
+        public float animationDuration = 1.5f; // duration of the dice roll animation
+        private bool _doneRolling = true;
+        private bool _isFirstRoll = true;
 
-        // Finding the Roll button in the scene
-        _rollButton = GameObject.Find("RollDice-Button").GetComponent<Button>();
-    }
+        private Image _diceImage1;
+        private Image _diceImage2;
+        private Button _rollButton;
 
-    public void RollTheDice()
-    {
-        if (_doneRolling)
+        void Start()
         {
-            StartCoroutine(RollDiceAnimation());
-        }
-    }
+            // Saving references to the dice images
+            _diceImage1 = transform.GetChild(0).GetComponent<Image>();
+            _diceImage2 = transform.GetChild(1).GetComponent<Image>();
 
-    private IEnumerator RollDiceAnimation()
-    {
-        _isFirstRoll = false;
-        _doneRolling = false;
-        _rollButton.interactable = false; // disabling the Roll button
-        
-        float elapsed = 0.0f; // time elapsed from the start of the animation
-        while (elapsed < animationDuration)
+            // Finding the Roll button in the scene
+            _rollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>();
+        }
+
+        public void RollTheDice()
         {
-            int randomIndex1 = Random.Range(0, diceImage.Length);
-            int randomIndex2 = Random.Range(0, diceImage.Length);
+            if (_doneRolling)
+            {
+                _isFirstRoll = false;
+                _doneRolling = false;
+                _rollButton.interactable = false; // disabling the Roll button
 
-            _diceImage1.sprite = diceImage[randomIndex1];
-            _diceImage2.sprite = diceImage[randomIndex2];
-
-            elapsed += Time.deltaTime;
-            yield return null; // wait for the next frame
+                StartCoroutine(DiceRolling());
+            }
         }
-        _doneRolling = true;
-        _rollButton.interactable = true; // enabling the Roll button again
-        
-        _currentValues = Dice.RollDiceInts(); // getting final value of the dice roll
-        _diceImage1.sprite = diceImage[_currentValues[0] - 1]; // setting the final dice image 1
-        _diceImage2.sprite = diceImage[_currentValues[1] - 1];
-    }
 
-    public int[] GetCurrentValues()
-    {
-        return _currentValues;
-    }
+        private IEnumerator DiceRolling()
+        {
+            float elapsed = 0.0f; // time elapsed from the start of the animation
+            while (elapsed < animationDuration)
+            {
+                int randomIndex1 = Random.Range(0, diceImage.Length);
+                int randomIndex2 = Random.Range(0, diceImage.Length);
 
-    public bool GetDoneRolling()
-    {
-        return _doneRolling;
-    }
+                _diceImage1.sprite = diceImage[randomIndex1];
+                _diceImage2.sprite = diceImage[randomIndex2];
 
-    public bool IsFirstRoll()
-    {
-        return _isFirstRoll;
+                elapsed += Time.deltaTime;
+                yield return null; // wait for the next frame
+            }
+
+            _currentValues = Dice.RollDiceInts(); // getting final value of the dice roll
+            _diceImage1.sprite = diceImage[_currentValues[0] - 1]; // setting the final dice image 1
+            _diceImage2.sprite = diceImage[_currentValues[1] - 1];
+
+            _doneRolling = true;
+            _rollButton.interactable = true; // enabling the Roll button again
+        }
+
+        public int[] GetCurrentValues()
+        {
+            return _currentValues;
+        }
+
+        public bool GetDoneRolling()
+        {
+            return _doneRolling;
+        }
+
+        public bool IsFirstRoll()
+        {
+            return _isFirstRoll;
+        }
     }
 }
-
-

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class DiceTotalCheck : MonoBehaviour
 {
     private DiceRoller _diceRoller;
+    
+    private TextMeshProUGUI _diceTotalText;
     
     // Start is called before the first frame update
     void Start()
@@ -21,11 +23,11 @@ public class DiceTotalCheck : MonoBehaviour
         
         if (_diceRoller.GetDoneRolling() && !_diceRoller.IsFirstRoll())
         {
-            GetComponent<TextMeshProUGUI>().text = (currentValues[0] + currentValues[1]).ToString();
+            _diceTotalText.text = (currentValues[0] + currentValues[1]).ToString();
         }
         else
         {
-            GetComponent<TextMeshProUGUI>().text = "";
+            _diceTotalText.text = "";
         }
     }
 }
