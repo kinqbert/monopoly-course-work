@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     
     private bool _isDiceRolled;
     private DiceRoller _diceRoller;
+    
+    private bool _isGameOver;
+    private bool _isMoving;
 
     void Start()
     {
@@ -26,6 +29,8 @@ public class GameManager : MonoBehaviour
         _currentPlayer = _players[_currentPlayerIndex];
 
         _diceRoller = FindObjectOfType<DiceRoller>();
+        
+        _isGameOver = false;
     }
 
     void Update()

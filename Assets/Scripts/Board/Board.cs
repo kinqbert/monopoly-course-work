@@ -4,7 +4,7 @@ namespace Board
 {
     public class Board
     {
-        private static readonly int CellsCount = 38;
+        public static readonly int CellsCount = 38;
         private static Board _instance;
         private List<string> _cells;
 
