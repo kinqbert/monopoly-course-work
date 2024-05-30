@@ -1,41 +1,43 @@
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace Board
 {
-    public class Board
+    public class Board : MonoBehaviour
     {
-        public static readonly int CellsCount = 38;
-        private static Board _instance;
-        private List<string> _cells;
+        public static readonly int CellsCount = 36;
+        public Tile[] Tiles; // This will be set in the Inspector
 
-        private Board()
-        {
-            _cells = new List<string>(40);
-            InitializeBoard();
-        }
+        public static Tile[] Cells { get; private set; }
 
-        public static Board GetInstance()
+        void Awake()
         {
-            if (_instance == null)
+            // Ensure Tiles array is initialized
+            if (Tiles != null && Tiles.Length == CellsCount)
             {
-                _instance = new Board();
+                Cells = new Tile[CellsCount];
+                for (int i = 0; i < CellsCount; i++)
+                {
+                    Cells[i] = Tiles[i];
+                }
             }
-
-            return _instance;
-        }
-
-        private void InitializeBoard()
-        {
-            // Initialize the board with field names
-            for (int i = 0; i < CellsCount; i++)
+            else
             {
-                _cells.Add($"Field {i}");
+                Debug.LogError("Tiles array is not properly initialized in the Inspector!");
             }
         }
 
-        public string GetCell(int index)
+        void Start()
         {
-            return _cells[index];
+            // Any additional setup
+        }
+
+        void Update()
+        {
+        }
+
+        public static Tile GetTile(int index)
+        {
+            return Cells[index];
         }
     }
 }
