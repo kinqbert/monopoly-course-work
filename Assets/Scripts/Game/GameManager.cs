@@ -19,26 +19,28 @@ namespace Game
         private bool _isGameOver;
 
         public Button rollButton;
+        public GameObject playerPrefab; // Assign this in the Inspector with the GameParticipant component
 
         void Start()
         {
+            _dice = GameObject.Find("DiceManager").GetComponent<Dice>();
+            _gameBoard = GameObject.Find("Board").GetComponent<Board.Board>();
+            rollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>(); // finding the button
+            rollButton.onClick.AddListener(RollDice); // RollDice will be called when the button is clicked
+            
             // initializing players
             _players = new List<GameParticipant>
             {
-                new GameParticipant("Player 1"),
-                new GameParticipant("Player 2")
+                InstantiatePlayer("Player 1"),
+                InstantiatePlayer("Player 2")
             };
 
             _currentPlayerIndex = 0;
             _currentPlayer = _players[_currentPlayerIndex];
 
-            _dice = GameObject.Find("DiceManager").GetComponent<Dice>();
             _dice.OnDiceRollComplete = OnDiceRollComplete; // Subscribe to the dice roll complete event
 
             _isGameOver = false;
-
-            rollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>(); // finding the button
-            rollButton.onClick.AddListener(RollDice); // RollDice will be called when the button is clicked
         }
 
         void Update()
@@ -56,6 +58,14 @@ namespace Game
             }
         }
 
+        private GameParticipant InstantiatePlayer(string playerName)
+        {
+            GameObject playerObj = Instantiate(playerPrefab); // Instantiate the prefab
+            GameParticipant player = playerObj.GetComponent<GameParticipant>();
+            player.Initialize(playerName);
+            return player;
+        }
+
         public void RollDice()
         {
             _dice.RollTheDice();
@@ -63,7 +73,7 @@ namespace Game
 
         private void OnDiceRollComplete()
         {
-            Debug.Log("Current player: " + _currentPlayer.Name);
+            // Debug.Log("Current player: " + _currentPlayer.Name);
             _currentPlayer.Move(_dice.GetTotal());
             EndTurn();
         }

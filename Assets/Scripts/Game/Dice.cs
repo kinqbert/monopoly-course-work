@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Game
@@ -22,8 +21,7 @@ namespace Game
         
         public Action OnDiceRollComplete; // Add this action
 
-        void Start()
-        {
+        void Start() {
             // saving references to the dice images
             _diceImage1 = GameObject.Find("Dice-Image-1").GetComponent<Image>();
             _diceImage2 = GameObject.Find("Dice-Image-2").GetComponent<Image>();
@@ -32,10 +30,8 @@ namespace Game
             _rollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>();
         }
 
-        public void RollTheDice()
-        {
-            if (_doneRolling)
-            {
+        public void RollTheDice() {
+            if (_doneRolling) {
                 _isFirstRoll = false;
                 _doneRolling = false;
                 _rollButton.interactable = false; // disabling the Roll button
@@ -44,11 +40,9 @@ namespace Game
             }
         }
 
-        private IEnumerator DiceRolling()
-        {
+        private IEnumerator DiceRolling() {
             float elapsed = 0.0f; // time elapsed from the start of the animation
-            while (elapsed < animationDuration)
-            {
+            while (elapsed < animationDuration) {
                 int randomIndex1 = UnityEngine.Random.Range(0, diceImages.Length);
                 int randomIndex2 = UnityEngine.Random.Range(0, diceImages.Length);
 
@@ -69,42 +63,34 @@ namespace Game
             OnDiceRollComplete?.Invoke(); // Call the completion action
         }
 
-        private int[] RollDiceInts()
-        {
-            for (var i = 0; i < 2; i++)
-            {
+        private int[] RollDiceInts() {
+            for (var i = 0; i < 2; i++) {
                 _currentValues[i] = RollSingleDice();
             }
             return _currentValues;
         }
 
-        private int RollSingleDice()
-        {
+        private int RollSingleDice() {
             return Random.Next(1, 7);
         }
 
-        public bool IsDouble()
-        {
+        public bool IsDouble() {
             return _currentValues[0] == _currentValues[1];
         }
 
-        public int[] GetCurrentValues()
-        {
+        public int[] GetCurrentValues() {
             return _currentValues;
         }
 
-        public int GetTotal()
-        {
+        public int GetTotal() {
             return _currentValues[0] + _currentValues[1];
         }
 
-        public bool GetDoneRolling()
-        {
+        public bool GetDoneRolling() {
             return _doneRolling;
         }
 
-        public bool IsFirstRoll()
-        {
+        public bool IsFirstRoll() {
             return _isFirstRoll;
         }
     }
