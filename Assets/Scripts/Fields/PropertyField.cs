@@ -10,7 +10,7 @@ namespace Fields
             
         }
 
-        public new string Name;
+        public string Name;
         public bool IsOwned;
 
         public override void OnPlayerLanded(GameParticipant player)

@@ -1,16 +1,20 @@
 using Players;
+using UnityEngine;
 
 namespace Fields
 {
     public class NeutralField : Field
     {
-        public new string Name { get; }
+        public new string FieldName { get; }
         
         public NeutralField(string name)
         {
-            Name = name;
+            FieldName = name;
         }
 
-        public override void OnPlayerLanded(GameParticipant player) { }
+        public override void OnPlayerLanded(GameParticipant player)
+        {
+            Debug.Log($"{player.Name} landed on a neutral field: {FieldName}");
+        }
     }
 }

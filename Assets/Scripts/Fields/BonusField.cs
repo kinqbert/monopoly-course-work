@@ -5,12 +5,12 @@ namespace Fields
 {
     public class BonusField : Field
     {
-        public new string Name { get; }
+        public new string FieldName { get; }
         private int _moneyAmount; // positive for bonus, negative for penalty
         
-        public BonusField(string name, int money)
+        public BonusField(string fieldName, int money)
         {
-            Name = name;
+            FieldName = fieldName;
             _moneyAmount = money;
         }
 

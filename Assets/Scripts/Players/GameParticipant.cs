@@ -19,7 +19,7 @@ namespace Players
         private readonly float _liftTime = 0.2f;
         private readonly float _smoothTime = 0.25f;
         private readonly float _liftHeight = 1f; // height to lift the player piece
-        
+
         public int getPlayerMoney()
         {
             return Money;
@@ -32,7 +32,13 @@ namespace Players
         
         public void Move(int steps)
         {
-            StartCoroutine(MoveToTile(steps));
+            int finalTileIndex = (_currentTileIndex + steps) % Board.Board.CellsCount;
+            Tile finalTile = _board.GetTile(finalTileIndex);
+
+            _currentTileIndex = finalTileIndex;
+            CurrentTile = finalTile;
+            
+            StartCoroutine(MoveToTile(finalTile));
         }
     
         public void Initialize(string name)
@@ -46,25 +52,19 @@ namespace Players
             transform.position = _startingTile.transform.position;
         }
         
-        private IEnumerator MoveToTile(int steps)
+        private IEnumerator MoveToTile(Tile tile)
         {
-            int finalTileIndex = (_currentTileIndex + steps) % Board.Board.CellsCount;
-            Tile finalTile = _board.GetTile(finalTileIndex);
-
             // go up
             yield return StartCoroutine(LiftUp());
 
             // move to position above the target tile
-            Vector3 positionAboveTarget = finalTile.transform.position + Vector3.up * _liftHeight;
+            Vector3 positionAboveTarget = tile.transform.position + Vector3.up * _liftHeight;
             yield return StartCoroutine(MoveToPosition(positionAboveTarget));
 
             // go down
-            yield return StartCoroutine(LiftDown(finalTile.transform.position));
+            yield return StartCoroutine(LiftDown(tile.transform.position));
 
             // update the current tile
-            _currentTileIndex = finalTileIndex;
-            CurrentTile = finalTile;
-            Debug.Log($"NAME: {Name}. CURRENT TILE: {CurrentTile.name}. STEPS: {steps}.");
         }
         
         // ANIMATION COROUTINES
