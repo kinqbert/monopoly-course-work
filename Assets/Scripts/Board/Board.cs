@@ -85,7 +85,6 @@ namespace Board
             for (int i = 0; i < tiles.Count; i++)
             {
                 tiles[i].Field = _fields[i];
-                Debug.Log($"Tile {i} assigned field: {_fields[i].GetType().Name}, {_fields[i].FieldName}");
             }
         }
 
