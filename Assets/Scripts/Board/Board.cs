@@ -7,11 +7,13 @@ namespace Board
         public static readonly int CellsCount = 36;
         public Tile[] Tiles; // This will be set in the Inspector
 
+        // some unity bullshit
+        // to create static Cells array you have to create a nonstatic public Tiles array to assign in the inspector
+        // after that we assign each assigned tile to the static Cells array and that's how we can use it as static
         public static Tile[] Cells { get; private set; }
 
         void Awake()
         {
-            // Ensure Tiles array is initialized
             if (Tiles != null && Tiles.Length == CellsCount)
             {
                 Cells = new Tile[CellsCount];
