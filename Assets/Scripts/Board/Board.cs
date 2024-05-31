@@ -1,45 +1,106 @@
+using System.Collections.Generic;
+using Fields;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Board
 {
     public class Board : MonoBehaviour
     {
         public static readonly int CellsCount = 36;
-        public Tile[] Tiles; // This will be set in the Inspector
-
-        // some unity bullshit
-        // to create static Cells array you have to create a nonstatic public Tiles array to assign in the inspector
-        // after that we assign each assigned tile to the static Cells array and that's how we can use it as static
-        public static Tile[] Cells { get; private set; }
+        
+        [FormerlySerializedAs("Tiles")] public List<Tile> tiles; // This will be set in the Inspector
+        private List<Field> _fields; // Array to store all fields
 
         void Awake()
         {
-            if (Tiles != null && Tiles.Length == CellsCount)
+            _fields = new List<Field>();
+            
+            /////////////////////////////////////////////
+            
+            _fields.Add(new NeutralField("Start"));
+            
+            /////////////////////////////////////////////
+            
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            
+            /////////////////////////////////////////////
+            
+            _fields.Add(new NeutralField("Corner"));
+            
+            /////////////////////////////////////////////
+            
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            
+            /////////////////////////////////////////////
+            
+            _fields.Add(new NeutralField("Corner"));
+            
+            /////////////////////////////////////////////
+            
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            
+            /////////////////////////////////////////////
+            
+            _fields.Add(new NeutralField("Corner"));
+            
+            /////////////////////////////////////////////
+            
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            _fields.Add(new BonusField("Bonus", 100));
+            _fields.Add(new BonusField("Bonus", -100));
+            
+            /////////////////////////////////////////////
+            
+            if (_fields.Count != CellsCount)
             {
-                Cells = new Tile[CellsCount];
-                for (int i = 0; i < CellsCount; i++)
-                {
-                    Cells[i] = Tiles[i];
-                }
+                Debug.LogError("Fields count is not equal to CellsCount");
             }
-            else
+            
+            /////////////////////////////////////////////
+            
+            for (int i = 0; i < tiles.Count; i++)
             {
-                Debug.LogError("Tiles array is not properly initialized in the Inspector!");
+                tiles[i].Field = _fields[i];
             }
         }
 
-        void Start()
+        public Tile GetTile(int index)
         {
-            // Any additional setup
+            return tiles[index];
         }
-
-        void Update()
+        
+        public Field GetField(int index)
         {
-        }
-
-        public static Tile GetTile(int index)
-        {
-            return Cells[index];
+            return _fields[index];
         }
     }
 }
+
+

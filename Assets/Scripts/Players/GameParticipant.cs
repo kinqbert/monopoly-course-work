@@ -1,22 +1,42 @@
 using UnityEngine;
+using Fields;
 
 namespace Players
 {
     public class GameParticipant : MonoBehaviour
     {
-        private Tile _startingTile;
-        private Tile _currentTile;
-        private int _currentTileIndex;
         public string Name { get; private set; }
+        public int Money { get; private set; }
+
+
+        private Tile _startingTile;
+        public Tile CurrentTile { get; private set; }
+        private int _currentTileIndex;
     
+        private Board.Board _board;
+        
         private Vector3 _targetPosition;
         private Vector3 _velocity = Vector3.zero;
-        private float _smoothTime = 0.5f;
+        private readonly float _smoothTime = 0.5f;
         
-        // Start is called before the first frame update
-        void Start()
+        public int getPlayerMoney()
         {
+            return Money;
+        }
         
+        public void ModifyMoney(int amount)
+        {
+            Money += amount;
+        }
+        
+        public void Move(int steps)
+        {
+            int finalTileIndex = (_currentTileIndex + steps) % Board.Board.CellsCount;
+
+            _currentTileIndex = finalTileIndex;
+            CurrentTile = _board.GetTile(_currentTileIndex);
+            
+            SetNewTargetPosition(CurrentTile.transform.position);
         }
 
         // Update is called once per frame
@@ -30,22 +50,14 @@ namespace Players
     
         public void Initialize(string name)
         {
+            _board = GameObject.Find("Board").GetComponent<Board.Board>();
+                
             Name = name;
             _currentTileIndex = 0;
-            _startingTile = Board.Board.GetTile(_currentTileIndex);
-            _currentTile = _startingTile;
+            _startingTile = _board.GetTile(_currentTileIndex);
+            CurrentTile = _startingTile;
             transform.position = _startingTile.transform.position;
             _targetPosition = transform.position;
-        }
-    
-        public void Move(int steps)
-        {
-            int finalTileIndex = (_currentTileIndex + steps) % Board.Board.CellsCount;
-
-            _currentTileIndex = finalTileIndex;
-            _currentTile = Board.Board.GetTile(_currentTileIndex);
-            
-            SetNewTargetPosition(_currentTile.transform.position);
         }
         
         private void SetNewTargetPosition(Vector3 targetPosition)

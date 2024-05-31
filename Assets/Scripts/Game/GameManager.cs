@@ -19,7 +19,7 @@ namespace Game
         private bool _isGameOver;
 
         public Button rollButton;
-        public GameObject playerPrefab; // Assign this in the Inspector with the GameParticipant component
+        public GameObject playerPrefab;
 
         void Start()
         {
@@ -75,6 +75,7 @@ namespace Game
         {
             // Debug.Log("Current player: " + _currentPlayer.Name);
             _currentPlayer.Move(_dice.GetTotal());
+            _currentPlayer.CurrentTile.Field.OnPlayerLanded(_currentPlayer);
             EndTurn();
         }
 
