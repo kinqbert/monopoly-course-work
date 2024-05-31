@@ -64,7 +64,6 @@ namespace Players
             // update the current tile
             _currentTileIndex = finalTileIndex;
             CurrentTile = finalTile;
-            Debug.Log($"NAME: {Name}. CURRENT TILE: {CurrentTile.name}. STEPS: {steps}.");
         }
         
         // ANIMATION COROUTINES
