@@ -1,0 +1,4 @@
+repository "MonopolyGame-Course@KerbersGPT@cloud"
+  path "/"
+    br "/main"
+    co "/main"
