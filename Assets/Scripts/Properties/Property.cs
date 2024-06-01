@@ -5,47 +5,47 @@ namespace Properties
 {
     public class Property
     {
-        public string propertyName { get; }
-        public int cost { get; }
-        public int rent { get; }
-        public GameParticipant owner;
+        public string PropertyName { get; }
+        public int Cost { get; }
+        private int _rent;
+        private GameParticipant _owner;
 
-        public bool IsOwned => owner != null;
+        public bool IsOwned => _owner != null;
         
         public Property(string name, int cost, int rent)
         {
-            propertyName = name;
-            this.cost = cost;
-            this.rent = rent;
-            owner = null;
+            PropertyName = name;
+            Cost = cost;
+            _rent = rent;
+            _owner = null;
         }
 
         public void BuyProperty(GameParticipant player)
         {
-            if (!IsOwned && player.Money >= cost)
+            if (!IsOwned && player.Money >= Cost)
             {
-                player.ModifyMoney(-cost);
-                owner = player;
+                player.ModifyMoney(-Cost);
+                _owner = player;
                 player.AddProperty(this);
-                Debug.Log($"{player.Name} bought {propertyName} for {cost} money.");
+                Debug.Log($"{player.Name} bought {PropertyName} for {Cost} money.");
             }
             else if (IsOwned)
             {
-                Debug.Log($"{propertyName} is already owned by {owner.Name}.");
+                Debug.Log($"{PropertyName} is already owned by {_owner.Name}.");
             }
             else
             {
-                Debug.Log($"{player.Name} does not have enough money to buy {propertyName}.");
+                Debug.Log($"{player.Name} does not have enough money to buy {PropertyName}.");
             }
         }
 
         public void PayRent(GameParticipant player)
         {
-            if (IsOwned && owner != player)
+            if (IsOwned && _owner != player)
             {
-                player.ModifyMoney(-rent);
-                owner.ModifyMoney(rent);
-                Debug.Log($"{player.Name} paid {rent} rent to {owner.Name} for {propertyName}.");
+                player.ModifyMoney(-_rent);
+                _owner.ModifyMoney(_rent);
+                Debug.Log($"{player.Name} paid {_rent} rent to {_owner.Name} for {PropertyName}.");
             }
         }
     }

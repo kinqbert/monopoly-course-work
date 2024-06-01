@@ -9,11 +9,11 @@ namespace UI
         public TextMeshProUGUI playerNameText;
         public TextMeshProUGUI playerMoneyText;
         public TextMeshProUGUI playerPropertiesText;
-        
-        public GameParticipant Player { get; private set; }
+
+        private GameParticipant _player;
 
         public void SetPlayerInfo(GameParticipant player) {
-            Player = player;
+            _player = player;
             
             playerNameText.text = player.Name;
             playerMoneyText.text = "Money: " + player.Money;
@@ -22,8 +22,8 @@ namespace UI
 
         public void UpdatePlayerInfo()
         {
-            playerMoneyText.text = "Money: " + Player.Money;
-            playerPropertiesText.text = "Properties amount: " + Player.Properties.Count;
+            playerMoneyText.text = "Money: " + _player.Money;
+            playerPropertiesText.text = "Properties amount: " + _player.Properties.Count;
         }
     }
 }
