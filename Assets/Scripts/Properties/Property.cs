@@ -3,14 +3,22 @@ using UnityEngine;
 
 namespace Properties
 {
-    public class Property : MonoBehaviour
+    public class Property
     {
-        public string propertyName;
-        public int cost;
-        public int rent;
+        public string propertyName { get; }
+        public int cost { get; }
+        public int rent { get; }
         public GameParticipant owner;
 
         public bool IsOwned => owner != null;
+        
+        public Property(string name, int cost, int rent)
+        {
+            propertyName = name;
+            this.cost = cost;
+            this.rent = rent;
+            owner = null;
+        }
 
         public void BuyProperty(GameParticipant player)
         {
@@ -18,7 +26,16 @@ namespace Properties
             {
                 player.ModifyMoney(-cost);
                 owner = player;
+                player.AddProperty(this);
                 Debug.Log($"{player.Name} bought {propertyName} for {cost} money.");
+            }
+            else if (IsOwned)
+            {
+                Debug.Log($"{propertyName} is already owned by {owner.Name}.");
+            }
+            else
+            {
+                Debug.Log($"{player.Name} does not have enough money to buy {propertyName}.");
             }
         }
 

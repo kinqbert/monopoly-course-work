@@ -38,24 +38,31 @@ namespace Game
             _currentPlayerIndex = 0;
             _currentPlayer = _players[_currentPlayerIndex];
 
-            _dice.OnDiceRollComplete = OnDiceRollComplete; // Subscribe to the dice roll complete event
+            _dice.OnDiceRollComplete = OnDiceRollComplete; // subscribe to the dice roll complete event
 
             _isGameOver = false;
         }
 
         void Update()
         {
-            if (_isGameOver)
+            if (!_isGameOver)
             {
-                // handle game over state
-                return;
+                // RollDice will be called when the space key is pressed
+                if (Input.GetKeyDown(KeyCode.Space) && !_isDiceRolled)
+                {
+                    RollDice();
+                }
+
+                if (ConfirmationWindow.IsActive)
+                {
+                    GameUI.BlockAll();
+                }
+                else
+                {
+                    GameUI.UnblockAll();
+                }
             }
             
-            // RollDice will be called when the space key is pressed
-            if (Input.GetKeyDown(KeyCode.Space) && !_isDiceRolled)
-            {
-                RollDice();
-            }
         }
 
         private GameParticipant InstantiatePlayer(string playerName)
@@ -73,13 +80,11 @@ namespace Game
 
         private void OnDiceRollComplete()
         {
-            // Debug.Log("Current player: " + _currentPlayer.Name);
             _currentPlayer.Move(_dice.GetTotal());
             _currentPlayer.CurrentTile.Field.OnPlayerLanded(_currentPlayer);
             EndTurn();
         }
 
-        // Call this method after the player completes their turn
         private void EndTurn()
         {
             _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
@@ -87,3 +92,4 @@ namespace Game
         }
     }
 }
+

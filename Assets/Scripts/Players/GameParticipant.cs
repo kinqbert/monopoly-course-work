@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Fields;
+using Properties;
 
 namespace Players
 {
@@ -8,6 +10,7 @@ namespace Players
     {
         public string Name { get; private set; }
         public int Money { get; private set; }
+        public List<Property> Properties;
 
         private Tile _startingTile;
         public Tile CurrentTile { get; private set; }
@@ -19,15 +22,15 @@ namespace Players
         private readonly float _liftTime = 0.2f;
         private readonly float _smoothTime = 0.25f;
         private readonly float _liftHeight = 1f; // height to lift the player piece
-
-        public int getPlayerMoney()
-        {
-            return Money;
-        }
         
         public void ModifyMoney(int amount)
         {
             Money += amount;
+        }
+        
+        public void AddProperty(Property property)
+        {
+            Properties.Add(property);
         }
         
         public void Move(int steps)
@@ -46,10 +49,12 @@ namespace Players
             _board = GameObject.Find("Board").GetComponent<Board.Board>();
                 
             Name = name;
+            Money = 1500;
             _currentTileIndex = 0;
             _startingTile = _board.GetTile(_currentTileIndex);
             CurrentTile = _startingTile;
             transform.position = _startingTile.transform.position;
+            Properties = new List<Property>();
         }
         
         private IEnumerator MoveToTile(Tile tile)

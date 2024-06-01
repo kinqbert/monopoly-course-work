@@ -1,5 +1,6 @@
-using UnityEngine;
+using Game;
 using Players;
+using Properties;
 
 namespace Fields
 {
@@ -7,27 +8,42 @@ namespace Fields
     {
         public PropertyField(string name, int cost, int rent)
         {
-            
+            Name = name;
+            Property = new Property(name, cost, rent);
+        }
+        
+        public PropertyField(Property property)
+        {
+            Name = property.propertyName;
+            Property = property;
         }
 
         public string Name;
-        public bool IsOwned;
+        public Property Property { get; }
 
         public override void OnPlayerLanded(GameParticipant player)
         {
-            // if (!IsOwned && player.Money >= cost)
-            // {
-            //     player.ModifyMoney(-cost);
-            //     owner = player;
-            //     Debug.Log($"{player.Name} bought {propertyName} for {cost} money.");
-            // }
-            // else if (IsOwned && owner != player)
-            // {
-            //     player.ModifyMoney(-rent);
-            //     owner.ModifyMoney(rent);
-            //     Debug.Log($"{player.Name} paid {rent} rent to {owner.Name} for {propertyName}.");
-            // }
+            if (Property.IsOwned)
+            {
+                Property.PayRent(player);
+            }
+            else
+            {
+                ShowConfirmationWindow(player);
+            }
+        }
+
+        private void ShowConfirmationWindow(GameParticipant player)
+        {
+            ConfirmationWindow.Instance.Show($"Do you want to buy {Property.propertyName} for {Property.cost}?", 
+                () => {
+                    if (!Property.IsOwned)  // Ensure the property hasn't been bought in the meantime
+                    {
+                        Property.BuyProperty(player);
+                    }
+                }, 
+                () => {
+                });
         }
     }
 }
-
