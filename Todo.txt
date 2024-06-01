@@ -1,0 +1,11 @@
+- notification about money change
+- jail field
+- ai
+- action buttons
+- property upgrade
+- player models
+- tiles models
+- bigger tiles
+
+- (*) casino
+- (*) player model selection
