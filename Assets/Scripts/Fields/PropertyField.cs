@@ -1,4 +1,4 @@
-using Game;
+using UI;
 using Players;
 using Properties;
 
@@ -35,11 +35,12 @@ namespace Fields
 
         private void ShowConfirmationWindow(GameParticipant player)
         {
-            ConfirmationWindow.Instance.Show($"Do you want to buy {Property.propertyName} for {Property.cost}?", 
+            GameUI.YesNoWindow($"Do you want to buy {Property.propertyName} for {Property.cost}?", 
                 () => {
                     if (!Property.IsOwned)  // Ensure the property hasn't been bought in the meantime
                     {
                         Property.BuyProperty(player);
+                        GameUI.UpdatePlayerInfo();
                     }
                 }, 
                 () => {
