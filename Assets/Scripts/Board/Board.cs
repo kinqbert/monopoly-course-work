@@ -10,7 +10,7 @@ namespace Board
         public static readonly int CellsCount = 36;
         
         [FormerlySerializedAs("Tiles")] public List<Tile> tiles; // this will be set in the Inspector
-        private List<Field> _fields; // Array to store all fields
+        private List<Field> _fields; // array to store all fields
 
         void Awake()
         {
@@ -49,7 +49,7 @@ namespace Board
             _fields.Add(new PropertyField("Araxis", 200, 20));
 
             // Corner
-            _fields.Add(new NeutralField("Corner"));
+            _fields.Add(new JailField("Jail"));
 
             // Second side: 6 cities, 2 bonus fields
             _fields.Add(new PropertyField("Albuquerque", 220, 22));

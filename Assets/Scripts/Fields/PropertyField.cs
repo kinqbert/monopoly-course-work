@@ -6,6 +6,9 @@ namespace Fields
 {
     public class PropertyField : Field
     {
+        public string Name;
+        public Property Property { get; }
+        
         public PropertyField(string name, int cost, int rent)
         {
             Name = name;
@@ -18,8 +21,6 @@ namespace Fields
             Property = property;
         }
 
-        public string Name;
-        public Property Property { get; }
 
         public override void OnPlayerLanded(GameParticipant player)
         {

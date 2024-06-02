@@ -14,8 +14,16 @@ namespace UI
 
         public void SetPlayerInfo(GameParticipant player) {
             _player = player;
+
+            if (player.IsInJail)
+            {
+                playerNameText.text = "[IN JAIL] " + player.Name;
+            }
+            else
+            {
+                playerNameText.text = player.Name;
+            }
             
-            playerNameText.text = player.Name;
             playerMoneyText.text = "Money: " + player.Money;
             playerPropertiesText.text = "Properties amount: " + player.Properties.Count;
         }

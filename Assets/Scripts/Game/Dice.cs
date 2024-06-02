@@ -70,6 +70,10 @@ namespace Game
             for (var i = 0; i < 2; i++) {
                 _currentValues[i] = RollSingleDice();
             }
+
+            _currentValues[0] = 5;
+            _currentValues[1] = 4;
+            
             return _currentValues;
         }
 

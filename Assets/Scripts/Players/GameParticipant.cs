@@ -25,12 +25,15 @@ namespace Players
         private readonly float _liftHeight = 1f; // height to lift the player piece
         private readonly float _offsetRadius = 0.2f; // radius for circular offset
 
+        public bool IsInJail { get; private set; }
+        public int JailTurns { get; private set; }
+
         public void ModifyMoney(int amount)
         {
             Money += amount;
             GameUI.ShowNotification($"${amount}");
         }
-        
+
         public void AddProperty(Property property)
         {
             Properties.Add(property);
@@ -41,22 +44,28 @@ namespace Players
         {
             Properties.Remove(property);
         }
-        
+
         public void Move(int steps)
         {
+            if (IsInJail)
+            {
+                Debug.Log($"{Name} is in jail and cannot move.");
+                return;
+            }
+
             int finalTileIndex = (_currentTileIndex + steps) % Board.Board.CellsCount;
             Tile finalTile = _board.GetTile(finalTileIndex);
 
             _currentTileIndex = finalTileIndex;
             CurrentTile = finalTile;
-            
+
             StartCoroutine(MoveToTile(finalTile));
         }
-    
+
         public void Initialize(string name)
         {
             _board = GameObject.Find("Board").GetComponent<Board.Board>();
-                
+
             Name = name;
             Money = 1500;
             _currentTileIndex = 0;
@@ -65,7 +74,7 @@ namespace Players
             transform.position = _startingTile.transform.position;
             Properties = new List<Property>();
         }
-        
+
         private IEnumerator MoveToTile(Tile tile)
         {
             // go up
@@ -81,9 +90,9 @@ namespace Players
 
             // go down
             yield return StartCoroutine(LiftDown(offsetPosition));
+
+            // update the current tile
         }
-        
-        // ANIMATION COROUTINES
 
         private IEnumerator MoveToPosition(Vector3 target)
         {
@@ -135,6 +144,27 @@ namespace Players
             offset.z = Mathf.Sin(angle) * _offsetRadius;
 
             return tile.transform.position + offset;
+        }
+
+        public void SendToJail(int turns)
+        {
+            IsInJail = true;
+            JailTurns = turns;
+        }
+
+        public void ReleaseFromJail()
+        {
+            IsInJail = false;
+            JailTurns = 0;
+        }
+
+        public void DecrementJailTurns()
+        {
+            JailTurns--;
+            if (JailTurns <= 0)
+            {
+                ReleaseFromJail();
+            }
         }
     }
 }

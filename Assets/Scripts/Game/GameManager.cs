@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Players;
 using UI;
+using Players;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,12 +18,11 @@ namespace Game
         private bool _isGameOver;
 
         public Dice dice;
-        public Board.Board gameBoard;
         public Button rollButton;
         public Button endTurnButton;
         public GameObject playerPrefab;
 
-        void Awake()
+        private void Awake()
         {
             if (Instance == null)
             {
@@ -35,11 +34,11 @@ namespace Game
             }
         }
 
-        void Start()
+        private void Start()
         {
             rollButton.onClick.AddListener(RollDice); // RollDice will be called when the button is clicked
             endTurnButton.onClick.AddListener(EndTurn); // EndTurn will be called when the button is clicked
-            
+
             // Initializing players
             _players = new List<GameParticipant>
             {
@@ -50,23 +49,23 @@ namespace Game
             _currentPlayerIndex = 0;
             _currentPlayer = _players[_currentPlayerIndex];
 
-            dice.OnDiceRollComplete = OnDiceRollComplete; // Subscribe to the dice roll complete event
+            dice.OnDiceRollComplete = OnDiceRollComplete; // subscribe to the dice roll complete event
 
             _isGameOver = false;
             _isDiceRolled = false;
 
-            // Initially disable the end turn button
-            endTurnButton.interactable = false;
+            // initially disabling the end turn button
+            GameUI.BlockEndTurnButton();
 
-            // Update player info UI
+            // updating player info UI
             UpdatePlayerInfoUI();
         }
 
-        void Update()
+        private void Update()
         {
             if (!_isGameOver)
             {
-                // Block/Unblock Roll button based on whether the dice is rolled
+                // block/unblock Roll button based on whether the dice is rolled
                 if (_isDiceRolled)
                 {
                     GameUI.BlockRollButton();
@@ -78,13 +77,13 @@ namespace Game
                     GameUI.UnblockRollButton();
                 }
 
-                // RollDice will be called when the space key is pressed
+                // rollDice will be called when the space key is pressed
                 if (Input.GetKeyDown(KeyCode.Space) && !_isDiceRolled)
                 {
                     RollDice();
                 }
 
-                // Block all interactions when the confirmation window is active
+                // blocking all interactions when the confirmation window is active
                 if (ConfirmationWindow.IsActive)
                 {
                     GameUI.BlockAll();
@@ -98,7 +97,7 @@ namespace Game
 
         private GameParticipant InstantiatePlayer(string playerName)
         {
-            GameObject playerObj = Instantiate(playerPrefab); // Instantiate the prefab
+            GameObject playerObj = Instantiate(playerPrefab); // instantiating the player piece prefab
             GameParticipant player = playerObj.GetComponent<GameParticipant>();
             player.Initialize(playerName);
             return player;
@@ -110,29 +109,58 @@ namespace Game
             {
                 dice.RollTheDice();
                 _isDiceRolled = true;
-                endTurnButton.interactable = true; // Enable end turn button after rolling the dice
+                GameUI.BlockRollButton();
             }
         }
 
         private void OnDiceRollComplete()
         {
-            _currentPlayer.Move(dice.GetTotal());
-            _currentPlayer.CurrentTile.Field.OnPlayerLanded(_currentPlayer);
-            UpdatePlayerInfoUI(); // Update player info UI after moving
+            if (_currentPlayer.IsInJail)
+            {
+                if (dice.IsDouble())
+                {
+                    _currentPlayer.ReleaseFromJail();
+                    GameUI.ShowNotification($"{_currentPlayer.Name} rolled a double and was released from jail.");
+                }
+                else
+                {
+                    _currentPlayer.DecrementJailTurns();
+                    if (_currentPlayer.JailTurns == 0)
+                    {
+                        GameUI.ShowNotification($"{_currentPlayer.Name} will be released from jail on next turn.");
+                    }
+                    else
+                    {
+                        GameUI.ShowNotification($"{_currentPlayer.Name} is still in jail for {_currentPlayer.JailTurns} more turn(s).");
+                    }
+                }
+            }
+            else
+            {
+                _currentPlayer.Move(dice.GetTotal());
+                _currentPlayer.CurrentTile.Field.OnPlayerLanded(_currentPlayer);
+            }
+            UpdatePlayerInfoUI(); // updating player info UI after moving
         }
 
         private void EndTurn()
         {
             _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
             _currentPlayer = _players[_currentPlayerIndex];
-            _isDiceRolled = false; // Reset the dice rolled flag for the next player
-            endTurnButton.interactable = false; // Disable end turn button until the next roll
-            UpdatePlayerInfoUI(); // Update player info UI for the new player
+            _isDiceRolled = false; // reset dice rolled flag for the next player
+            GameUI.BlockEndTurnButton();
+            UpdatePlayerInfoUI(); // updating player info UI for the new player
         }
 
         private void UpdatePlayerInfoUI()
         {
             GameUI.SetPlayerInfo(_currentPlayer);
+        }
+
+        public bool RollDiceForJail()
+        {
+            dice.RollTheDice();
+            return dice.IsDouble();
         }
 
         public GameParticipant GetCurrentPlayer()
