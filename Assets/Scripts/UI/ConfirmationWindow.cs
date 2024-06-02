@@ -9,9 +9,9 @@ namespace UI
         public static ConfirmationWindow Instance;
         public static bool IsActive { get; private set; }
 
-        public TextMeshProUGUI messageText;
-        public Button yesButton;
-        public Button noButton;
+        public TextMeshProUGUI messageText; // reference to the text component that displays the message
+        public Button yesButton; // reference to the button that confirms the action
+        public Button noButton; // reference to the button that cancels the action
 
         private void Awake()
         {
@@ -24,9 +24,15 @@ namespace UI
                 Destroy(gameObject);
             }
 
-            gameObject.SetActive(false); // Initially hide the confirmation window
+            gameObject.SetActive(false); // initially hide the confirmation window
         }
 
+        /// <summary>
+        /// Shows the confirmation window with the specified message and actions for yes and no.
+        /// </summary>
+        /// <param name="message">Message to be shown</param>
+        /// <param name="onYes">Function to be completed on confirm</param>
+        /// <param name="onNo">Function to be completed on cancel</param>
         public void Show(string message, System.Action onYes, System.Action onNo)
         {
             IsActive = true;

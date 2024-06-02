@@ -18,7 +18,7 @@ namespace UI
         public Button openPropertyListButton;
         public Button openUpgradeListButton;
 
-        private bool isUpgradeMode = false;
+        private bool _isUpgradeMode;
 
         private void Awake()
         {
@@ -41,7 +41,7 @@ namespace UI
 
         public void TogglePropertyListPanel(bool upgradeMode)
         {
-            isUpgradeMode = upgradeMode;
+            _isUpgradeMode = upgradeMode;
             propertyListPanel.SetActive(!propertyListPanel.activeSelf);
             if (propertyListPanel.activeSelf)
             {
@@ -66,7 +66,7 @@ namespace UI
                 GameObject propertyItem = Instantiate(propertyItemPrefab, propertyListContent);
                 TextMeshProUGUI propertyText = propertyItem.GetComponentInChildren<TextMeshProUGUI>();
                 propertyText.text = $"{property.Name} - ${property.Price} - Level {property.UpgradeLevel}";
-                if (isUpgradeMode)
+                if (_isUpgradeMode)
                 {
                     propertyItem.GetComponent<Button>().onClick.AddListener(() => UpgradeProperty(property));
                 }
@@ -95,7 +95,7 @@ namespace UI
 
         public void SetUpgradeMode(bool isUpgrade)
         {
-            isUpgradeMode = isUpgrade;
+            _isUpgradeMode = isUpgrade;
         }
     }
 }

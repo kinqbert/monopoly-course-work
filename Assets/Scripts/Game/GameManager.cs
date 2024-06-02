@@ -39,11 +39,13 @@ namespace Game
             rollButton.onClick.AddListener(RollDice); // RollDice will be called when the button is clicked
             endTurnButton.onClick.AddListener(EndTurn); // EndTurn will be called when the button is clicked
 
-            // Initializing players
+            // initializing players
             _players = new List<GameParticipant>
             {
                 InstantiatePlayer("Player 1"),
-                InstantiatePlayer("Player 2")
+                InstantiatePlayer("Player 2"),
+                InstantiatePlayer("Player 3"),
+                InstantiatePlayer("Player 4")
             };
 
             _currentPlayerIndex = 0;
@@ -58,7 +60,7 @@ namespace Game
             GameUI.BlockEndTurnButton();
 
             // updating player info UI
-            UpdatePlayerInfoUI();
+            GameUI.SetPlayerInfo(_currentPlayer);
         }
 
         private void Update()
@@ -120,7 +122,9 @@ namespace Game
                 if (dice.IsDouble())
                 {
                     _currentPlayer.ReleaseFromJail();
-                    GameUI.ShowNotification($"{_currentPlayer.Name} rolled a double and was released from jail.");
+                    GameUI.ShowNotification($"{_currentPlayer.Name} rolled a double and was released from jail and can move.");
+                    _currentPlayer.Move(dice.GetTotal()); // allowing the player to move if they roll a double on the same turn
+                    _currentPlayer.CurrentTile.Field.OnPlayerLanded(_currentPlayer);
                 }
                 else
                 {
@@ -140,7 +144,7 @@ namespace Game
                 _currentPlayer.Move(dice.GetTotal());
                 _currentPlayer.CurrentTile.Field.OnPlayerLanded(_currentPlayer);
             }
-            UpdatePlayerInfoUI(); // updating player info UI after moving
+            GameUI.UpdatePlayerInfo(); // updating player info UI after moving
         }
 
         private void EndTurn()
@@ -149,18 +153,7 @@ namespace Game
             _currentPlayer = _players[_currentPlayerIndex];
             _isDiceRolled = false; // reset dice rolled flag for the next player
             GameUI.BlockEndTurnButton();
-            UpdatePlayerInfoUI(); // updating player info UI for the new player
-        }
-
-        private void UpdatePlayerInfoUI()
-        {
-            GameUI.SetPlayerInfo(_currentPlayer);
-        }
-
-        public bool RollDiceForJail()
-        {
-            dice.RollTheDice();
-            return dice.IsDouble();
+            GameUI.SetPlayerInfo(_currentPlayer); // updating player info UI for the new player
         }
 
         public GameParticipant GetCurrentPlayer()

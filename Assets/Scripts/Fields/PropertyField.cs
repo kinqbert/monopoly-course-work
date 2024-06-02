@@ -20,8 +20,7 @@ namespace Fields
             Name = property.Name;
             Property = property;
         }
-
-
+        
         public override void OnPlayerLanded(GameParticipant player)
         {
             if (Property.IsOwned)

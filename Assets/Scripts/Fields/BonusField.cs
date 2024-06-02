@@ -5,19 +5,23 @@ namespace Fields
 {
     public class BonusField : Field
     {
-        public new string FieldName { get; }
-        private int _moneyAmount; // positive for bonus, negative for penalty
+        public string FieldName { get; }
+        private int _bonusAmount; // positive for bonus, negative for penalty
         
-        public BonusField(string fieldName, int money)
+        public BonusField(string fieldName, int bonus)
         {
             FieldName = fieldName;
-            _moneyAmount = money;
+            _bonusAmount = bonus;
         }
 
         public override void OnPlayerLanded(GameParticipant player)
         {
-            player.ModifyMoney(_moneyAmount);
-            GameUI.ShowNotification($"{player.Name} landed on {FieldName} and got ${_moneyAmount}");
+            player.ModifyMoney(_bonusAmount);
+            
+            if (_bonusAmount > 0)
+                GameUI.ShowNotification($"{player.Name} landed on {FieldName} and got ${_bonusAmount}");
+            else
+                GameUI.ShowNotification($"{player.Name} landed on {FieldName} and lost -${-_bonusAmount}");
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,9 +16,8 @@ namespace Game
 
         private Image _diceImage1;
         private Image _diceImage2;
-        private Button _rollButton;
 
-        private static readonly System.Random Random = new System.Random();
+        private static readonly System.Random Random = new ();
         
         public Action OnDiceRollComplete; // Add this action
 
@@ -25,16 +25,13 @@ namespace Game
             // saving references to the dice images
             _diceImage1 = GameObject.Find("Dice-Image-1").GetComponent<Image>();
             _diceImage2 = GameObject.Find("Dice-Image-2").GetComponent<Image>();
-
-            // finding the Roll button in the scene
-            _rollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>();
         }
 
         public void RollTheDice() {
             if (_doneRolling) {
                 _isFirstRoll = false;
                 _doneRolling = false;
-                _rollButton.interactable = false; // disabling the Roll button
+                GameUI.BlockRollButton(); // disabling the Roll button
 
                 StartCoroutine(DiceRolling());
             }
@@ -60,9 +57,9 @@ namespace Game
             _diceImage2.sprite = diceImages[_currentValues[1] - 1];
 
             _doneRolling = true;
-            _rollButton.interactable = true; // enabling the Roll button again
+            GameUI.UnblockRollButton(); // enabling the Roll button again
             
-            OnDiceRollComplete?.Invoke(); // Call the completion action
+            OnDiceRollComplete?.Invoke(); // call the completion action
         }
 
         private int[] RollDiceInts() 
@@ -70,9 +67,6 @@ namespace Game
             for (var i = 0; i < 2; i++) {
                 _currentValues[i] = RollSingleDice();
             }
-
-            _currentValues[0] = 5;
-            _currentValues[1] = 4;
             
             return _currentValues;
         }
