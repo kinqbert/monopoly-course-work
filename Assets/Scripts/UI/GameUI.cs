@@ -50,12 +50,16 @@ namespace UI
         {
             RollButton.interactable = false;
             EndTurnButton.interactable = false;
+            UpgradeButton.interactable = false;
+            SellButton.interactable = false;
         }
         
         public static void UnblockAll()
         {
             RollButton.interactable = true;
             EndTurnButton.interactable = true;
+            UpgradeButton.interactable = true;
+            SellButton.interactable = true;
         }
         
         public static void ShowNotification(string message)
