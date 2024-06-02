@@ -23,7 +23,8 @@ namespace Players
         private readonly float _liftTime = 0.2f;
         private readonly float _smoothTime = 0.25f;
         private readonly float _liftHeight = 1f; // height to lift the player piece
-        
+        private readonly float _offsetRadius = 0.2f; // radius for circular offset
+
         public void ModifyMoney(int amount)
         {
             Money += amount;
@@ -69,10 +70,12 @@ namespace Players
             Vector3 positionAboveTarget = tile.transform.position + Vector3.up * _liftHeight;
             yield return StartCoroutine(MoveToPosition(positionAboveTarget));
 
-            // go down
-            yield return StartCoroutine(LiftDown(tile.transform.position));
+            // Apply circular offset if multiple players are on the same tile
+            Vector3 offsetPosition = ApplyCircularOffset(tile);
+            yield return StartCoroutine(MoveToPosition(offsetPosition));
 
-            // update the current tile
+            // go down
+            yield return StartCoroutine(LiftDown(offsetPosition));
         }
         
         // ANIMATION COROUTINES
@@ -106,6 +109,27 @@ namespace Players
                 yield return null;
             }
             transform.position = target;
+        }
+
+        private Vector3 ApplyCircularOffset(Tile tile)
+        {
+            Vector3 offset = Vector3.zero;
+            GameParticipant[] playersOnTile = FindObjectsOfType<GameParticipant>();
+
+            int index = 0;
+            foreach (GameParticipant player in playersOnTile)
+            {
+                if (player.CurrentTile == tile && player != this)
+                {
+                    index++;
+                }
+            }
+
+            float angle = index * (2 * Mathf.PI / 4); // Adjust denominator for more players
+            offset.x = Mathf.Cos(angle) * _offsetRadius;
+            offset.z = Mathf.Sin(angle) * _offsetRadius;
+
+            return tile.transform.position + offset;
         }
     }
 }

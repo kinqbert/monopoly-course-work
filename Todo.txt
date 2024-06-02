@@ -1,4 +1,3 @@
-- notification about money change
 - jail field
 - ai
 - action buttons

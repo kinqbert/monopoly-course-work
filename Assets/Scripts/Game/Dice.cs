@@ -40,9 +40,11 @@ namespace Game
             }
         }
 
-        private IEnumerator DiceRolling() {
+        private IEnumerator DiceRolling() 
+        {
             float elapsed = 0.0f; // time elapsed from the start of the animation
             while (elapsed < animationDuration) {
+                
                 int randomIndex1 = UnityEngine.Random.Range(0, diceImages.Length);
                 int randomIndex2 = UnityEngine.Random.Range(0, diceImages.Length);
 
@@ -63,9 +65,11 @@ namespace Game
             OnDiceRollComplete?.Invoke(); // Call the completion action
         }
 
-        private int[] RollDiceInts() {
+        private int[] RollDiceInts() 
+        {
             for (var i = 0; i < 2; i++) {
-                _currentValues[i] = RollSingleDice();
+                _currentValues[i] = 1;
+                // _currentValues[i] = RollSingleDice();
             }
             return _currentValues;
         }

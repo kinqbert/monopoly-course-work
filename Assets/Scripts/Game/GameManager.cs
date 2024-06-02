@@ -30,7 +30,9 @@ namespace Game
             _players = new List<GameParticipant>
             {
                 InstantiatePlayer("Player 1"),
-                InstantiatePlayer("Player 2")
+                InstantiatePlayer("Player 2"),
+                InstantiatePlayer("Player 3"),
+                InstantiatePlayer("Player 4")
             };
 
             _currentPlayerIndex = 0;
