@@ -56,9 +56,11 @@ namespace Game
                 if (_isDiceRolled)
                 {
                     GameUI.BlockRollButton();
+                    GameUI.UnblockEndTurnButton();
                 }
                 else
                 {
+                    GameUI.BlockEndTurnButton();
                     GameUI.UnblockRollButton();
                 }
 
@@ -107,14 +109,11 @@ namespace Game
 
         private void EndTurn()
         {
-            if (_isDiceRolled)
-            {
-                _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
-                _currentPlayer = _players[_currentPlayerIndex];
-                _isDiceRolled = false; // Reset the dice rolled flag for the next player
-                endTurnButton.interactable = false; // Disable end turn button until the next roll
-                UpdatePlayerInfoUI(); // Update player info UI for the new player
-            }
+            _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
+            _currentPlayer = _players[_currentPlayerIndex];
+            _isDiceRolled = false; // Reset the dice rolled flag for the next player
+            endTurnButton.interactable = false; // Disable end turn button until the next roll
+            UpdatePlayerInfoUI(); // Update player info UI for the new player
         }
 
         private void UpdatePlayerInfoUI()

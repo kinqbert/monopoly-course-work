@@ -1,5 +1,5 @@
-using UnityEngine;
 using Players;
+using UI;
 
 namespace Fields
 {
@@ -17,7 +17,7 @@ namespace Fields
         public override void OnPlayerLanded(GameParticipant player)
         {
             player.ModifyMoney(_moneyAmount);
-            Debug.Log($"{player.Name} landed on a bonus field and received {_moneyAmount} money.");
+            GameUI.ShowNotification($"{player.Name} landed on {FieldName} and got ${_moneyAmount}");
         }
     }
 }

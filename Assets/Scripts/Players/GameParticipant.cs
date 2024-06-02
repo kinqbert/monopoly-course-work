@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fields;
 using Properties;
+using UI;
 
 namespace Players
 {
@@ -26,11 +27,13 @@ namespace Players
         public void ModifyMoney(int amount)
         {
             Money += amount;
+            GameUI.ShowNotification($"${amount}");
         }
         
         public void AddProperty(Property property)
         {
             Properties.Add(property);
+            GameUI.ShowNotification($"{Name} bought {property.Name} for ${property.Price}");
         }
         
         public void Move(int steps)

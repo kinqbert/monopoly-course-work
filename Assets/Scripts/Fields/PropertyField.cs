@@ -14,7 +14,7 @@ namespace Fields
         
         public PropertyField(Property property)
         {
-            Name = property.PropertyName;
+            Name = property.Name;
             Property = property;
         }
 
@@ -35,7 +35,7 @@ namespace Fields
 
         private void ShowConfirmationWindow(GameParticipant player)
         {
-            GameUI.YesNoWindow($"Do you want to buy {Property.PropertyName} for {Property.Cost}?", 
+            GameUI.YesNoWindow($"Do you want to buy {Property.Name} for {Property.Price}?", 
                 () => {
                     if (!Property.IsOwned)  // Ensure the property hasn't been bought in the meantime
                     {
