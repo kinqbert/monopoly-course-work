@@ -75,7 +75,7 @@ namespace Board
             _fields.Add(new PropertyField("Vice City", 440, 44));
 
             // Corner
-            _fields.Add(new NeutralField("Corner"));
+            _fields.Add(new TaxField("Tax Field"));
 
             // Fourth side: 6 cities, 2 bonus fields
             _fields.Add(new PropertyField("Baldur's Gate", 460, 46));

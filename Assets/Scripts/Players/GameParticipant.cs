@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fields;
 using Properties;
-using UI;
 
 namespace Players
 {

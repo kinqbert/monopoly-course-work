@@ -40,7 +40,7 @@ namespace Properties
         {
             _owner.ModifyMoney(Price);
             _owner.RemoveProperty(this);
-            Debug.Log($"{_owner.Name} sold {Name} for {Price} money.");
+            GameUI.ShowNotification($"{_owner.Name} sold {Name} for {Price} money.");
             _owner = null;
             GameUI.UpdatePlayerInfo();
         }
