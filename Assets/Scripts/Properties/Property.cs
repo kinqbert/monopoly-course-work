@@ -1,27 +1,25 @@
 using Players;
 using UI;
-using UnityEngine;
 
 namespace Properties
 {
     public class Property
     {
         public string Name { get; }
-        public int Price { get; }
+        public int Price => _initialPrice + (int)(_initialPrice * 0.25 * (UpgradeLevel - 1)); // Dynamic price calculation
         public int UpgradeLevel { get; private set; }
         public bool IsOwned => _owner != null;
-        
-        
-        private GameParticipant _owner;
-        private int _rent;
-        private int UpgradeCost => Price / 2 * (UpgradeLevel + 1);
+        public int UpgradeCost => _initialPrice / 10 + UpgradeLevel * 50;
+        public int Rent => _initialPrice / 10 * UpgradeLevel;
 
-        
-        public Property(string name, int price, int rent)
+        private int _initialPrice;
+        private GameParticipant _owner;
+
+        public Property(string name, int price)
         {
             Name = name;
-            Price = price;
-            _rent = rent;
+            UpgradeLevel = 1; // Start with level 1
+            _initialPrice = price;
             _owner = null;
         }
 
@@ -38,20 +36,31 @@ namespace Properties
         
         public void SellProperty()
         {
-            _owner.ModifyMoney(Price);
+            int sellPrice = _initialPrice; // Reset to initial price on sell
+            _owner.ModifyMoney(sellPrice);
             _owner.RemoveProperty(this);
-            GameUI.ShowNotification($"{_owner.Name} sold {Name} for {Price} money.");
+            UpgradeLevel = 1; // Reset to level 1
+            GameUI.ShowNotification($"{_owner.Name} sold {Name} for ${sellPrice} money.");
             _owner = null;
             GameUI.UpdatePlayerInfo();
         }
 
         public void UpgradeProperty()
         {
-            if (UpgradeLevel <= 5)
+            if (UpgradeLevel < 5 && _owner.Money >= UpgradeCost)
             {
                 _owner.ModifyMoney(-UpgradeCost);
                 UpgradeLevel++;
                 GameUI.UpdatePlayerInfo();
+                GameUI.ShowNotification($"{_owner.Name} upgraded {Name} to level {UpgradeLevel}");
+            }
+            else if (_owner.Money < UpgradeCost)
+            {
+                GameUI.ShowNotification($"{_owner.Name} doesn't have enough money to upgrade {Name}.");
+            }
+            else
+            {
+                GameUI.ShowNotification($"{Name} is already at max level.");
             }
         }
 
@@ -59,7 +68,7 @@ namespace Properties
         {
             if (IsOwned && _owner != player)
             {
-                int rentToPay = _rent + (UpgradeLevel * 10); // Example rent formula
+                int rentToPay = Rent + (UpgradeLevel * 10); // Example rent formula
                 player.ModifyMoney(-rentToPay);
                 _owner.ModifyMoney(rentToPay);
                 GameUI.ShowNotification($"{player.Name} paid {rentToPay} rent to {_owner.Name} for {Name}.");

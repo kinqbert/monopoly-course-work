@@ -65,7 +65,16 @@ namespace UI
             {
                 GameObject propertyItem = Instantiate(propertyItemPrefab, propertyListContent);
                 TextMeshProUGUI propertyText = propertyItem.GetComponentInChildren<TextMeshProUGUI>();
-                propertyText.text = $"{property.Name} - ${property.Price} - Level {property.UpgradeLevel}";
+
+                if (property.UpgradeLevel == 5)
+                {
+                    propertyText.text = $"{property.Name} - Rent: ${property.Rent} - ${property.Price} - Level MAX";
+                }
+                else
+                {
+                    propertyText.text = $"{property.Name} - Rent: ${property.Rent} - ${property.Price} - Level: {property.UpgradeLevel} - Upgrade Cost: ${property.UpgradeCost}";
+                }
+                
                 if (_isUpgradeMode)
                 {
                     propertyItem.GetComponent<Button>().onClick.AddListener(() => UpgradeProperty(property));
@@ -87,15 +96,8 @@ namespace UI
 
         private void UpgradeProperty(Property property)
         {
-            GameParticipant currentPlayer = GameManager.Instance.GetCurrentPlayer();
             property.UpgradeProperty();
-            GameUI.ShowNotification($"{currentPlayer.Name} upgraded {property.Name} to level {property.UpgradeLevel}");
             PopulatePropertyList();
-        }
-
-        public void SetUpgradeMode(bool isUpgrade)
-        {
-            _isUpgradeMode = isUpgrade;
         }
     }
 }

@@ -9,10 +9,10 @@ namespace Fields
         public string Name;
         public Property Property { get; }
         
-        public PropertyField(string name, int cost, int rent)
+        public PropertyField(string name, int cost)
         {
             Name = name;
-            Property = new Property(name, cost, rent);
+            Property = new Property(name, cost);
         }
         
         public PropertyField(Property property)
