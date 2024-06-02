@@ -1,10 +1,7 @@
-- jail field
 - ai
-- action buttons
-- property upgrade
+- casino field
 - player models
 - tiles models
 - bigger tiles
 
-- (*) casino
 - (*) player model selection

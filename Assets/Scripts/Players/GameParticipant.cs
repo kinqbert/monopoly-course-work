@@ -21,10 +21,10 @@ namespace Players
         
         // ANIMATION VARIABLES
         private Vector3 _velocity = Vector3.zero;
-        private readonly float _liftTime = 0.2f;
-        private readonly float _smoothTime = 0.25f;
-        private readonly float _liftHeight = 1f; // height to lift the player piece
-        private readonly float _offsetRadius = 0.2f; // radius for circular offset
+        private const float LiftTime = 0.2f;
+        private const float SmoothTime = 0.25f;
+        private const float LiftHeight = 1f; // height to lift the player piece
+        private const float OffsetRadius = 0.2f; // radius for circular offset
 
         public bool IsInJail { get; private set; }
         public int JailTurns { get; private set; }
@@ -97,7 +97,7 @@ namespace Players
             yield return StartCoroutine(LiftUp());
 
             // move to position above the target tile
-            Vector3 positionAboveTarget = tile.transform.position + Vector3.up * _liftHeight;
+            Vector3 positionAboveTarget = tile.transform.position + Vector3.up * LiftHeight;
             yield return StartCoroutine(MoveToPosition(positionAboveTarget));
 
             // Apply circular offset if multiple players are on the same tile
@@ -115,7 +115,7 @@ namespace Players
         {
             while (Vector3.Distance(transform.position, target) > 0.01f)
             {
-                transform.position = Vector3.SmoothDamp(transform.position, target, ref _velocity, _smoothTime);
+                transform.position = Vector3.SmoothDamp(transform.position, target, ref _velocity, SmoothTime);
                 yield return null;
             }
             transform.position = target;
@@ -124,10 +124,10 @@ namespace Players
         // coroutine to lift the player piece up before moving to the target position
         private IEnumerator LiftUp()
         {
-            Vector3 liftTarget = transform.position + Vector3.up * _liftHeight;
+            Vector3 liftTarget = transform.position + Vector3.up * LiftHeight;
             while (Vector3.Distance(transform.position, liftTarget) > 0.01f)
             {
-                transform.position = Vector3.SmoothDamp(transform.position, liftTarget, ref _velocity, _liftTime);
+                transform.position = Vector3.SmoothDamp(transform.position, liftTarget, ref _velocity, LiftTime);
                 yield return null;
             }
             transform.position = liftTarget;
@@ -138,7 +138,7 @@ namespace Players
         {
             while (Vector3.Distance(transform.position, target) > 0.01f)
             {
-                transform.position = Vector3.SmoothDamp(transform.position, target, ref _velocity, _liftTime);
+                transform.position = Vector3.SmoothDamp(transform.position, target, ref _velocity, LiftTime);
                 yield return null;
             }
             transform.position = target;
@@ -161,8 +161,8 @@ namespace Players
 
             // oh so that's why we had to learn math in school 
             float angle = index * (2 * Mathf.PI / 4); 
-            offset.x = Mathf.Cos(angle) * _offsetRadius;
-            offset.z = Mathf.Sin(angle) * _offsetRadius;
+            offset.x = Mathf.Cos(angle) * OffsetRadius;
+            offset.z = Mathf.Sin(angle) * OffsetRadius;
 
             return tile.transform.position + offset;
         }
