@@ -1,4 +1,5 @@
 using Players;
+using UI;
 using UnityEngine;
 
 namespace Properties
@@ -8,16 +9,16 @@ namespace Properties
         public string Name { get; }
         public int Price { get; }
         private int _rent;
-        private GameParticipant _owner;
+        public GameParticipant Owner;
 
-        public bool IsOwned => _owner != null;
+        public bool IsOwned => Owner != null;
         
         public Property(string name, int price, int rent)
         {
             Name = name;
             Price = price;
             _rent = rent;
-            _owner = null;
+            Owner = null;
         }
 
         public void BuyProperty(GameParticipant player)
@@ -25,27 +26,39 @@ namespace Properties
             if (!IsOwned && player.Money >= Price)
             {
                 player.ModifyMoney(-Price);
-                _owner = player;
+                Owner = player;
                 player.AddProperty(this);
                 Debug.Log($"{player.Name} bought {Name} for {Price} money.");
             }
             else if (IsOwned)
             {
-                Debug.Log($"{Name} is already owned by {_owner.Name}.");
+                Debug.Log($"{Name} is already owned by {Owner.Name}.");
             }
             else
             {
                 Debug.Log($"{player.Name} does not have enough money to buy {Name}.");
             }
         }
+        
+        public void SellProperty()
+        {
+            if (IsOwned)
+            {
+                Owner.ModifyMoney(Price);
+                Owner.RemoveProperty(this);
+                Debug.Log($"{Owner.Name} sold {Name} for {Price} money.");
+                Owner = null;
+                GameUI.UpdatePlayerInfo();
+            }
+        }
 
         public void PayRent(GameParticipant player)
         {
-            if (IsOwned && _owner != player)
+            if (IsOwned && Owner != player)
             {
                 player.ModifyMoney(-_rent);
-                _owner.ModifyMoney(_rent);
-                Debug.Log($"{player.Name} paid {_rent} rent to {_owner.Name} for {Name}.");
+                Owner.ModifyMoney(_rent);
+                Debug.Log($"{player.Name} paid {_rent} rent to {Owner.Name} for {Name}.");
             }
         }
     }

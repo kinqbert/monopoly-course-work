@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using UI;
 using Players;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +8,8 @@ namespace Game
 {
     public class GameManager : MonoBehaviour
     {
+        public static GameManager Instance;
+
         private List<GameParticipant> _players;
         private int _currentPlayerIndex;
         private GameParticipant _currentPlayer;
@@ -21,6 +23,18 @@ namespace Game
         public Button endTurnButton;
         public GameObject playerPrefab;
 
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
         void Start()
         {
             rollButton.onClick.AddListener(RollDice); // RollDice will be called when the button is clicked
@@ -30,9 +44,7 @@ namespace Game
             _players = new List<GameParticipant>
             {
                 InstantiatePlayer("Player 1"),
-                InstantiatePlayer("Player 2"),
-                InstantiatePlayer("Player 3"),
-                InstantiatePlayer("Player 4")
+                InstantiatePlayer("Player 2")
             };
 
             _currentPlayerIndex = 0;
@@ -121,6 +133,11 @@ namespace Game
         private void UpdatePlayerInfoUI()
         {
             GameUI.SetPlayerInfo(_currentPlayer);
+        }
+
+        public GameParticipant GetCurrentPlayer()
+        {
+            return _currentPlayer;
         }
     }
 }

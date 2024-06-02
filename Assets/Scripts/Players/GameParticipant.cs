@@ -37,6 +37,11 @@ namespace Players
             GameUI.ShowNotification($"{Name} bought {property.Name} for ${property.Price}");
         }
         
+        public void RemoveProperty(Property property)
+        {
+            Properties.Remove(property);
+        }
+        
         public void Move(int steps)
         {
             int finalTileIndex = (_currentTileIndex + steps) % Board.Board.CellsCount;

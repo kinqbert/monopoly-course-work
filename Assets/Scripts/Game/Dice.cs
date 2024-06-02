@@ -68,8 +68,7 @@ namespace Game
         private int[] RollDiceInts() 
         {
             for (var i = 0; i < 2; i++) {
-                _currentValues[i] = 1;
-                // _currentValues[i] = RollSingleDice();
+                _currentValues[i] = RollSingleDice();
             }
             return _currentValues;
         }
