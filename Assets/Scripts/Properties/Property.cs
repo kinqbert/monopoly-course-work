@@ -10,6 +10,8 @@ namespace Properties
         public int Price { get; }
         private int _rent;
         public GameParticipant Owner;
+        public int UpgradeLevel { get; private set; } = 0;
+        private int _upgradeCost => Price / 2 * (UpgradeLevel + 1); // Example upgrade cost formula
 
         public bool IsOwned => Owner != null;
         
@@ -42,23 +44,29 @@ namespace Properties
         
         public void SellProperty()
         {
-            if (IsOwned)
-            {
-                Owner.ModifyMoney(Price);
-                Owner.RemoveProperty(this);
-                Debug.Log($"{Owner.Name} sold {Name} for {Price} money.");
-                Owner = null;
-                GameUI.UpdatePlayerInfo();
-            }
+            Owner.ModifyMoney(Price);
+            Owner.RemoveProperty(this);
+            Debug.Log($"{Owner.Name} sold {Name} for {Price} money.");
+            Owner = null;
+            GameUI.UpdatePlayerInfo();
+        }
+
+        public void UpgradeProperty()
+        {
+            Owner.ModifyMoney(-_upgradeCost);
+            UpgradeLevel++;
+            Debug.Log($"{Owner.Name} upgraded {Name} to level {UpgradeLevel} for {_upgradeCost} money.");
+            GameUI.UpdatePlayerInfo();
         }
 
         public void PayRent(GameParticipant player)
         {
             if (IsOwned && Owner != player)
             {
-                player.ModifyMoney(-_rent);
-                Owner.ModifyMoney(_rent);
-                Debug.Log($"{player.Name} paid {_rent} rent to {Owner.Name} for {Name}.");
+                int rentToPay = _rent + (UpgradeLevel * 10); // Example rent formula
+                player.ModifyMoney(-rentToPay);
+                Owner.ModifyMoney(rentToPay);
+                Debug.Log($"{player.Name} paid {rentToPay} rent to {Owner.Name} for {Name}.");
             }
         }
     }

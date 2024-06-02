@@ -8,8 +8,9 @@ namespace UI
     {
         private static readonly Button RollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>();
         private static readonly Button EndTurnButton = GameObject.Find("End-Turn-Button").GetComponent<Button>();
+        private static readonly Button UpgradeButton = GameObject.Find("Upgrade-Button").GetComponent<Button>();
+        private static readonly Button SellButton = GameObject.Find("Sell-Button").GetComponent<Button>();
         private static readonly PlayerInfoPanel PlayerInfoPanel = GameObject.Find("Player-Info-Panel").GetComponent<PlayerInfoPanel>();
-        // private static readonly NotificationPanel NotificationPanel = GameObject.Find("Notification-Panel").GetComponent<NotificationPanel>();
 
         public static void YesNoWindow(string message, System.Action onYes, System.Action onNo)
         {
