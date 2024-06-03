@@ -8,8 +8,7 @@ namespace UI
     {
         private static readonly Button RollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>();
         private static readonly Button EndTurnButton = GameObject.Find("End-Turn-Button").GetComponent<Button>();
-        private static readonly Button UpgradeButton = GameObject.Find("Upgrade-Button").GetComponent<Button>();
-        private static readonly Button SellButton = GameObject.Find("Sell-Button").GetComponent<Button>();
+        private static readonly Button OpenPropertyListButton = GameObject.Find("Open-Property-List-Button").GetComponent<Button>();
         private static readonly PlayerInfoPanel PlayerInfoPanel = GameObject.Find("Player-Info-Panel").GetComponent<PlayerInfoPanel>();
 
         public static void YesNoWindow(string message, System.Action onYes, System.Action onNo)
@@ -50,16 +49,14 @@ namespace UI
         {
             RollButton.interactable = false;
             EndTurnButton.interactable = false;
-            UpgradeButton.interactable = false;
-            SellButton.interactable = false;
+            OpenPropertyListButton.interactable = false;
         }
         
         public static void UnblockAll()
         {
             RollButton.interactable = true;
             EndTurnButton.interactable = true;
-            UpgradeButton.interactable = true;
-            SellButton.interactable = true;
+            OpenPropertyListButton.interactable = true;
         }
         
         public static void ShowNotification(string message)

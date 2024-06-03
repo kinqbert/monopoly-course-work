@@ -36,7 +36,7 @@ namespace Properties
         
         public void SellProperty()
         {
-            int sellPrice = _initialPrice; // Reset to initial price on sell
+            int sellPrice = Price; // Reset to initial price on sell
             _owner.ModifyMoney(sellPrice);
             _owner.RemoveProperty(this);
             UpgradeLevel = 1; // Reset to level 1

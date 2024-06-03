@@ -16,9 +16,6 @@ namespace UI
         public GameObject propertyItemPrefab;
         public Transform propertyListContent;
         public Button openPropertyListButton;
-        public Button openUpgradeListButton;
-
-        private bool _isUpgradeMode;
 
         private void Awake()
         {
@@ -35,13 +32,11 @@ namespace UI
         private void Start()
         {
             propertyListPanel.SetActive(false);
-            openPropertyListButton.onClick.AddListener(() => TogglePropertyListPanel(false));
-            openUpgradeListButton.onClick.AddListener(() => TogglePropertyListPanel(true));
+            openPropertyListButton.onClick.AddListener(TogglePropertyListPanel);
         }
 
-        public void TogglePropertyListPanel(bool upgradeMode)
+        private void TogglePropertyListPanel()
         {
-            _isUpgradeMode = upgradeMode;
             propertyListPanel.SetActive(!propertyListPanel.activeSelf);
             if (propertyListPanel.activeSelf)
             {
@@ -65,7 +60,7 @@ namespace UI
             {
                 GameObject propertyItem = Instantiate(propertyItemPrefab, propertyListContent);
                 TextMeshProUGUI propertyText = propertyItem.GetComponentInChildren<TextMeshProUGUI>();
-
+                
                 if (property.UpgradeLevel == 5)
                 {
                     propertyText.text = $"{property.Name} - Rent: ${property.Rent} - ${property.Price} - Level MAX";
@@ -74,30 +69,26 @@ namespace UI
                 {
                     propertyText.text = $"{property.Name} - Rent: ${property.Rent} - ${property.Price} - Level: {property.UpgradeLevel} - Upgrade Cost: ${property.UpgradeCost}";
                 }
-                
-                if (_isUpgradeMode)
-                {
-                    propertyItem.GetComponent<Button>().onClick.AddListener(() => UpgradeProperty(property));
-                }
-                else
-                {
-                    propertyItem.GetComponent<Button>().onClick.AddListener(() => SellProperty(property));
-                }
-            }
-        }
 
-        private void SellProperty(Property property)
-        {
-            GameParticipant currentPlayer = GameManager.Instance.GetCurrentPlayer();
-            property.SellProperty();
-            GameUI.ShowNotification($"{currentPlayer.Name} sold {property.Name} for ${property.Price}");
-            PopulatePropertyList();
+                // Find the buttons within the instantiated prefab
+                Button upgradeButton = propertyItem.transform.Find("UpgradeButton").GetComponent<Button>();
+                Button sellButton = propertyItem.transform.Find("SellButton").GetComponent<Button>();
+
+                upgradeButton.onClick.AddListener(() => UpgradeProperty(property));
+                sellButton.onClick.AddListener(() => SellProperty(property));
+            }
         }
 
         private void UpgradeProperty(Property property)
         {
             property.UpgradeProperty();
-            PopulatePropertyList();
+            PopulatePropertyList(); // Refresh the list to reflect changes
+        }
+
+        private void SellProperty(Property property)
+        {
+            property.SellProperty();
+            PopulatePropertyList(); // Refresh the list to reflect changes
         }
     }
 }
