@@ -49,7 +49,8 @@ namespace Board
             _fields.Add(new PropertyField("Araxis", 200));
 
             // Corner
-            _fields.Add(new JailField("Jail"));
+            _fields.Add(new CasinoField("Casino"));
+            // _fields.Add(new JailField("Jail"));
 
             // Second side: 6 cities, 2 bonus fields
             _fields.Add(new PropertyField("Albuquerque", 220));
@@ -62,7 +63,7 @@ namespace Board
             _fields.Add(new PropertyField("San Andreas", 320));
 
             // Corner
-            _fields.Add(new NeutralField("Corner"));
+            _fields.Add(new CasinoField("Casino"));
 
             // Third side: 6 cities, 2 bonus fields
             _fields.Add(new PropertyField("Blackwater", 340));

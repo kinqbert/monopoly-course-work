@@ -16,6 +16,7 @@ namespace Game
 
         private bool _isDiceRolled;
         private bool _isGameOver;
+        private bool _isCasinoRoll;
 
         public Dice dice;
         public Button rollButton;
@@ -55,6 +56,7 @@ namespace Game
 
             _isGameOver = false;
             _isDiceRolled = false;
+            _isCasinoRoll = false;
 
             // initially disabling the end turn button
             GameUI.BlockEndTurnButton();
@@ -109,14 +111,27 @@ namespace Game
         {
             if (!_isDiceRolled)
             {
+                _isCasinoRoll = false; // ensure this is not a casino roll
                 dice.RollTheDice();
                 _isDiceRolled = true;
                 GameUI.BlockRollButton();
             }
         }
 
+        public void RollDiceForCasino()
+        {
+            _isCasinoRoll = true;
+            dice.RollTheDice();
+        }
+
         private void OnDiceRollComplete()
         {
+            if (_isCasinoRoll)
+            {
+                CasinoUIManager.Instance.HandleCasinoRollComplete();
+                return;
+            }
+
             if (_currentPlayer.IsInJail)
             {
                 if (dice.IsDouble())

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fields;
 using Properties;
+using UI;
 
 namespace Players
 {
@@ -33,7 +34,7 @@ namespace Players
         {
             Money += amount;
         }
-
+        
         public void AddProperty(Property property)
         {
             Properties.Add(property);
