@@ -94,5 +94,9 @@ namespace Game
         public bool IsFirstRoll() {
             return _isFirstRoll;
         }
+        
+        public void ResetDice() {
+            _isFirstRoll = true;
+        }
     }
 }

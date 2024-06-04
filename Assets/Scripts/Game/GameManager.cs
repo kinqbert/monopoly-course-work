@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UI;
 using Players;
+using Properties;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +22,9 @@ namespace Game
         public Dice dice;
         public Button rollButton;
         public Button endTurnButton;
+        public Button restartButton;
         public GameObject playerPrefab;
+        public GameObject playerSelectionPanel; // Add this field
 
         private void Awake()
         {
@@ -39,6 +42,7 @@ namespace Game
         {
             rollButton.onClick.AddListener(RollDice);
             endTurnButton.onClick.AddListener(EndTurn);
+            restartButton.onClick.AddListener(RestartGame);
 
             dice.OnDiceRollComplete = OnDiceRollComplete;
 
@@ -113,6 +117,11 @@ namespace Game
             
             GameUI.UnblockAll();
             GameUI.BlockEndTurnButton();
+            
+            if (humanPlayers == 0)
+            {
+                RollDice();
+            }
         }
 
         public void RollDice()
@@ -214,6 +223,32 @@ namespace Game
             AiPlayer aiPlayer = playerObj.AddComponent<AiPlayer>();
             aiPlayer.Initialize(playerName);
             return aiPlayer;
+        }
+        
+        private void RestartGame()
+        {
+            // Reset properties and players
+            foreach (var player in _players)
+            {
+                foreach (Property property in player.Properties)
+                {
+                    property.ResetProperty();
+                }
+                
+                Destroy(player.gameObject);
+            }
+
+            _players.Clear();
+
+            // hide game UI elements
+            GameUI.BlockAll();
+
+            // show player selection panel
+            playerSelectionPanel.GetComponent<PlayerSelectionManager>().ShowSelectionPanel();
+
+            _isGameOver = false;
+            _isDiceRolled = false;
+            _isCasinoRoll = false;
         }
     }
 }
