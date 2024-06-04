@@ -14,7 +14,7 @@ namespace Fields
             _bonusAmount = bonus;
         }
 
-        public override void OnPlayerLanded(GameParticipant player)
+        public override void OnPlayerLanded(Player player)
         {
             player.ModifyMoney(_bonusAmount);
             

@@ -13,7 +13,7 @@ namespace Properties
         public int Rent => _initialPrice / 10 * UpgradeLevel;
 
         private int _initialPrice;
-        private GameParticipant _owner;
+        private Player _owner;
 
         public Property(string name, int price)
         {
@@ -23,7 +23,7 @@ namespace Properties
             _owner = null;
         }
 
-        public void BuyProperty(GameParticipant player)
+        public void BuyProperty(Player player)
         {
             if (!IsOwned && player.Money >= Price)
             {
@@ -36,11 +36,10 @@ namespace Properties
         
         public void SellProperty()
         {
-            int sellPrice = Price; // Reset to initial price on sell
-            _owner.ModifyMoney(sellPrice);
+            _owner.ModifyMoney(Price);
             _owner.RemoveProperty(this);
+            GameUI.ShowNotification($"{_owner.Name} sold {Name} for ${Price} money.");
             UpgradeLevel = 1; // Reset to level 1
-            GameUI.ShowNotification($"{_owner.Name} sold {Name} for ${sellPrice} money.");
             _owner = null;
             GameUI.UpdatePlayerInfo();
         }
@@ -64,7 +63,7 @@ namespace Properties
             }
         }
 
-        public void PayRent(GameParticipant player)
+        public void PayRent(Player player)
         {
             if (IsOwned && _owner != player)
             {
@@ -74,5 +73,12 @@ namespace Properties
                 GameUI.ShowNotification($"{player.Name} paid {rentToPay} rent to {_owner.Name} for {Name}.");
             }
         }
+        
+        public void ResetProperty()
+        {
+            UpgradeLevel = 1;
+            _owner = null;
+        }
+
     }
 }

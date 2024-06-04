@@ -13,7 +13,7 @@ namespace Fields
             Name = name;
         }
 
-        public override void OnPlayerLanded(GameParticipant player)
+        public override void OnPlayerLanded(Player player)
         {
             player.SendToJail(JailTurns);
             GameUI.ShowNotification($"{player.Name} is sent to jail for {JailTurns} turns.");

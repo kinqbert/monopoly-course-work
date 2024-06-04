@@ -11,6 +11,6 @@ namespace Fields
             FieldName = name;
         }
 
-        public override void OnPlayerLanded(GameParticipant player) { }
+        public override void OnPlayerLanded(Player player) { }
     }
 }

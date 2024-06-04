@@ -21,7 +21,7 @@ namespace Fields
             Property = property;
         }
         
-        public override void OnPlayerLanded(GameParticipant player)
+        public override void OnPlayerLanded(Player player)
         {
             if (Property.IsOwned)
             {
@@ -29,22 +29,39 @@ namespace Fields
             }
             else
             {
-                ShowConfirmationWindow(player);
+                if (player is AiPlayer aiPlayer)
+                {
+                    if (player.Money >= Property.Price)
+                    {
+                        Property.BuyProperty(player);
+                    }
+                }
+                else
+                {
+                    ShowConfirmationWindow(player);
+                }
             }
         }
 
-        private void ShowConfirmationWindow(GameParticipant player)
+        private void ShowConfirmationWindow(Player player)
         {
-            GameUI.YesNoWindow($"Do you want to buy {Property.Name} for {Property.Price}?", 
-                () => {
-                    if (!Property.IsOwned)  // Ensure the property hasn't been bought in the meantime
-                    {
-                        Property.BuyProperty(player);
-                        GameUI.UpdatePlayerInfo();
-                    }
-                }, 
-                () => {
-                });
+            if (player.Money >= Property.Price)
+            {
+                GameUI.YesNoWindow($"Do you want to buy {Property.Name} for {Property.Price}?", 
+                    () => {
+                        if (!Property.IsOwned)  // Ensure the property hasn't been bought in the meantime
+                        {
+                            Property.BuyProperty(player);
+                            GameUI.UpdatePlayerInfo();
+                        }
+                    }, 
+                    () => {
+                    });
+            }
+            else
+            {
+                GameUI.ShowNotification($"{player.Name} doesn't have enough money to buy {Name}.");
+            }
         }
     }
 }

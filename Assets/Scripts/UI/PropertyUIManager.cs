@@ -53,7 +53,7 @@ namespace UI
             }
 
             // Add new items
-            GameParticipant currentPlayer = GameManager.Instance.GetCurrentPlayer();
+            Player currentPlayer = GameManager.Instance.GetCurrentPlayer();
             List<Property> properties = currentPlayer.Properties;
 
             foreach (Property property in properties)

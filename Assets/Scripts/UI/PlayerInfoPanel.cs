@@ -10,9 +10,9 @@ namespace UI
         public TextMeshProUGUI playerMoneyText;
         public TextMeshProUGUI playerPropertiesText;
 
-        private GameParticipant _player;
+        private Player _player;
 
-        public void SetPlayerInfo(GameParticipant player) {
+        public void SetPlayerInfo(Player player) {
             _player = player;
 
             if (player.IsInJail)

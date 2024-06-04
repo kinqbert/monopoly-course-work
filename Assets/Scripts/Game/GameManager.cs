@@ -10,9 +10,9 @@ namespace Game
     {
         public static GameManager Instance;
 
-        private List<GameParticipant> _players;
+        private List<Player> _players;
         private int _currentPlayerIndex;
-        private GameParticipant _currentPlayer;
+        private Player _currentPlayer;
 
         private bool _isDiceRolled;
         private bool _isGameOver;
@@ -37,31 +37,27 @@ namespace Game
 
         private void Start()
         {
-            rollButton.onClick.AddListener(RollDice); // RollDice will be called when the button is clicked
-            endTurnButton.onClick.AddListener(EndTurn); // EndTurn will be called when the button is clicked
+            rollButton.onClick.AddListener(RollDice);
+            endTurnButton.onClick.AddListener(EndTurn);
 
-            // initializing players
-            _players = new List<GameParticipant>
+            _players = new List<Player>
             {
                 InstantiatePlayer("Player 1"),
-                InstantiatePlayer("Player 2"),
-                InstantiatePlayer("Player 3"),
-                InstantiatePlayer("Player 4")
+                InstantiateAiPlayer("Player 2"),
+                InstantiateAiPlayer("Player 3"),
+                InstantiateAiPlayer("Player 4")
             };
 
             _currentPlayerIndex = 0;
             _currentPlayer = _players[_currentPlayerIndex];
 
-            dice.OnDiceRollComplete = OnDiceRollComplete; // subscribe to the dice roll complete event
+            dice.OnDiceRollComplete = OnDiceRollComplete;
 
             _isGameOver = false;
             _isDiceRolled = false;
             _isCasinoRoll = false;
 
-            // initially disabling the end turn button
             GameUI.BlockEndTurnButton();
-
-            // updating player info UI
             GameUI.SetPlayerInfo(_currentPlayer);
         }
 
@@ -69,7 +65,15 @@ namespace Game
         {
             if (!_isGameOver)
             {
-                // block/unblock Roll button based on whether the dice is rolled
+                if (ConfirmationWindow.IsActive || CasinoUIManager.Instance.IsActive)
+                {
+                    GameUI.BlockAll();
+                }
+                else
+                {
+                    GameUI.UnblockAll();
+                }
+                
                 if (_isDiceRolled)
                 {
                     GameUI.BlockRollButton();
@@ -80,41 +84,34 @@ namespace Game
                     GameUI.BlockEndTurnButton();
                     GameUI.UnblockRollButton();
                 }
+                
+                if (_currentPlayer is AiPlayer)
+                {
+                    if (_isDiceRolled)
+                    {
+                        GameUI.BlockAll();
+                        GameUI.UnblockEndTurnButton();
+                    }
+                    else
+                    {
+                        GameUI.BlockAll();
+                    }
+                }
 
-                // rollDice will be called when the space key is pressed
                 if (Input.GetKeyDown(KeyCode.Space) && !_isDiceRolled)
                 {
                     RollDice();
                 }
-
-                // blocking all interactions when the confirmation window is active
-                if (ConfirmationWindow.IsActive)
-                {
-                    GameUI.BlockAll();
-                }
-                else
-                {
-                    GameUI.UnblockAll();
-                }
             }
-        }
-
-        private GameParticipant InstantiatePlayer(string playerName)
-        {
-            GameObject playerObj = Instantiate(playerPrefab); // instantiating the player piece prefab
-            GameParticipant player = playerObj.GetComponent<GameParticipant>();
-            player.Initialize(playerName);
-            return player;
         }
 
         public void RollDice()
         {
             if (!_isDiceRolled)
             {
-                _isCasinoRoll = false; // ensure this is not a casino roll
-                dice.RollTheDice();
+                _isCasinoRoll = false;
                 _isDiceRolled = true;
-                GameUI.BlockRollButton();
+                dice.RollTheDice();
             }
         }
 
@@ -132,48 +129,83 @@ namespace Game
                 return;
             }
 
-            if (_currentPlayer.IsInJail)
-            {
-                if (dice.IsDouble())
-                {
-                    _currentPlayer.ReleaseFromJail();
-                    GameUI.ShowNotification($"{_currentPlayer.Name} rolled a double and was released from jail and can move.");
-                    _currentPlayer.Move(dice.GetTotal()); // allowing the player to move if they roll a double on the same turn
-                    _currentPlayer.CurrentTile.Field.OnPlayerLanded(_currentPlayer);
-                }
-                else
-                {
-                    _currentPlayer.DecrementJailTurns();
-                    if (_currentPlayer.JailTurns == 0)
-                    {
-                        GameUI.ShowNotification($"{_currentPlayer.Name} will be released from jail on next turn.");
-                    }
-                    else
-                    {
-                        GameUI.ShowNotification($"{_currentPlayer.Name} is still in jail for {_currentPlayer.JailTurns} more turn(s).");
-                    }
-                }
-            }
-            else
-            {
-                _currentPlayer.Move(dice.GetTotal());
-                _currentPlayer.CurrentTile.Field.OnPlayerLanded(_currentPlayer);
-            }
-            GameUI.UpdatePlayerInfo(); // updating player info UI after moving
+            _currentPlayer.HandleOnDiceCompleted();
+            _currentPlayer.HandleBankruptcy();
+            
+            GameUI.UpdatePlayerInfo();
         }
-
-        private void EndTurn()
+        
+        public void EndTurn()
         {
             _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
             _currentPlayer = _players[_currentPlayerIndex];
-            _isDiceRolled = false; // reset dice rolled flag for the next player
-            GameUI.BlockEndTurnButton();
-            GameUI.SetPlayerInfo(_currentPlayer); // updating player info UI for the new player
+            _isDiceRolled = false;
+            GameUI.SetPlayerInfo(_currentPlayer);
+            
+            if (_currentPlayer is AiPlayer)
+            {
+                RollDice();
+            }
         }
-
-        public GameParticipant GetCurrentPlayer()
+        
+        public Player GetCurrentPlayer()
         {
             return _currentPlayer;
         }
+
+        // removes the player from the game
+        public void RemovePlayer(Player player)
+        {
+            // resets the properties owned by the player
+            foreach (var property in player.Properties)
+            {
+                property.ResetProperty();
+            }
+
+            // remove the player from the list
+            _players.Remove(player);
+            Destroy(player.gameObject);
+
+            // check if the game is over
+            if (_players.Count == 1)
+            {
+                _isGameOver = true;
+                GameUI.ShowNotification($"{_players[0].Name} wins the game!");
+                GameUI.BlockRollButton();
+                GameUI.BlockEndTurnButton();
+                return;
+            }
+
+            // if the current player is the one being removed, move to the next player
+            if (_currentPlayer == player)
+            {
+                EndTurn();
+            }
+
+            // update the current player index to ensure it is within bounds
+            _currentPlayerIndex %= _players.Count;
+
+            // update the UI
+            GameUI.SetPlayerInfo(_players[_currentPlayerIndex]);
+        }
+        
+        // instantiates a player prefab and initializes it
+        private Player InstantiatePlayer(string playerName)
+        {
+            GameObject playerObj = Instantiate(playerPrefab);
+            Player player = playerObj.GetComponent<Player>();
+            player.Initialize(playerName);
+            return player;
+        }
+        
+        private Player InstantiateAiPlayer(string playerName)
+        {
+            GameObject playerObj = Instantiate(playerPrefab); // Instantiate the prefab
+            AiPlayer aiPlayer = playerObj.AddComponent<AiPlayer>();
+            aiPlayer.Initialize(playerName);
+            return aiPlayer;
+        }
     }
 }
+
+

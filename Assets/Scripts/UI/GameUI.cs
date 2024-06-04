@@ -69,7 +69,7 @@ namespace UI
             PlayerInfoPanel.UpdatePlayerInfo();
         }
         
-        public static void SetPlayerInfo(GameParticipant player)
+        public static void SetPlayerInfo(Player player)
         {
             PlayerInfoPanel.SetPlayerInfo(player);
         }

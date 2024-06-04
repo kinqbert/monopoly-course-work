@@ -4,7 +4,7 @@ namespace Fields
 {
     public abstract class Field
     {
-        public abstract void OnPlayerLanded(GameParticipant player);
+        public abstract void OnPlayerLanded(Player player);
     }
 }
 

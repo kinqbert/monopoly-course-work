@@ -20,9 +20,10 @@ namespace UI
         public Button betDoubleButton;
         public Button leaveCasinoButton;
         public TextMeshProUGUI resultText;
+        public bool IsActive => casinoPanel.activeSelf;
         
         private bool _betsPlaced;
-        private GameParticipant _currentPlayer;
+        private Player _currentPlayer;
         private string _currentBetType;
         private int _currentBetAmount;
 
@@ -47,9 +48,10 @@ namespace UI
             leaveCasinoButton.onClick.AddListener(LeaveCasino);
         }
 
-        public void OpenCasino(GameParticipant player)
+        public void OpenCasino(Player player)
         {
             _currentPlayer = player;
+            
             casinoPanel.SetActive(true);
             resultText.text = "";
         }
@@ -67,7 +69,7 @@ namespace UI
                 
                 GameUI.UpdatePlayerInfo();
 
-                // Roll the dice and wait for the animation to complete
+                // roll the dice and wait for the animation to complete
                 GameManager.Instance.RollDiceForCasino();
                 yield return new WaitUntil(() => dice.GetDoneRolling());
                 
@@ -77,6 +79,36 @@ namespace UI
             {
                 resultText.text = "Invalid bet amount.";
             }
+        }
+
+        public void PlaceBet(Player player, string betType, int betAmount)
+        {
+            _currentPlayer = player;
+            _betsPlaced = true;
+
+            if (betAmount > 0 && betAmount <= _currentPlayer.Money)
+            {
+                _currentBetType = betType;
+                _currentBetAmount = betAmount;
+                _currentPlayer.ModifyMoney(-betAmount);
+
+                GameUI.UpdatePlayerInfo();
+
+                // Roll the dice and wait for the animation to complete
+                GameManager.Instance.RollDiceForCasino();
+
+                if (!(player is AiPlayer))
+                {
+                    HandleCasinoRollComplete();
+                    StartCoroutine(WaitForDiceRoll());
+                }
+            }
+        }
+
+        private IEnumerator WaitForDiceRoll()
+        {
+            yield return new WaitUntil(() => dice.GetDoneRolling());
+            HandleCasinoRollComplete();
         }
 
         public void HandleCasinoRollComplete()
@@ -96,7 +128,7 @@ namespace UI
                 case "odd":
                     if (total % 2 != 0)
                     {
-                        _currentPlayer.ModifyMoney(_currentBetAmount * 2); // Add winnings only
+                        _currentPlayer.ModifyMoney(_currentBetAmount * 2);
                         resultMessage += $"You won! Total money: {_currentPlayer.Money}";
                     }
                     else
@@ -107,7 +139,7 @@ namespace UI
                 case "even":
                     if (total % 2 == 0)
                     {
-                        _currentPlayer.ModifyMoney(_currentBetAmount * 2); // Add winnings only
+                        _currentPlayer.ModifyMoney(_currentBetAmount * 2);
                         resultMessage += $"You won! Total money: {_currentPlayer.Money}";
                     }
                     else
@@ -118,7 +150,7 @@ namespace UI
                 case "double":
                     if (isDouble)
                     {
-                        _currentPlayer.ModifyMoney(_currentBetAmount * 10); // Add winnings only
+                        _currentPlayer.ModifyMoney(_currentBetAmount * 10);
                         resultMessage += $"You won! Total money: {_currentPlayer.Money}";
                     }
                     else
@@ -133,7 +165,7 @@ namespace UI
             GameUI.UpdatePlayerInfo();
         }
 
-        private void LeaveCasino()
+        public void LeaveCasino()
         {
             casinoPanel.SetActive(false);
         }

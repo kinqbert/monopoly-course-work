@@ -12,9 +12,16 @@ namespace Fields
             Name = name;
         }
 
-        public override void OnPlayerLanded(GameParticipant player)
+        public override void OnPlayerLanded(Player player)
         {
-            CasinoUIManager.Instance.OpenCasino(player);
+            if (player is AiPlayer)
+            {
+                (player as AiPlayer).HandleCasino();
+            }
+            else
+            {
+                CasinoUIManager.Instance.OpenCasino(player);
+            }
         }
     }
 }
