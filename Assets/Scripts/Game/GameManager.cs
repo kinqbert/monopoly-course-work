@@ -40,25 +40,13 @@ namespace Game
             rollButton.onClick.AddListener(RollDice);
             endTurnButton.onClick.AddListener(EndTurn);
 
-            _players = new List<Player>
-            {
-                InstantiatePlayer("Player 1"),
-                InstantiateAiPlayer("Player 2"),
-                InstantiateAiPlayer("Player 3"),
-                InstantiateAiPlayer("Player 4")
-            };
-
-            _currentPlayerIndex = 0;
-            _currentPlayer = _players[_currentPlayerIndex];
-
             dice.OnDiceRollComplete = OnDiceRollComplete;
 
             _isGameOver = false;
             _isDiceRolled = false;
             _isCasinoRoll = false;
 
-            GameUI.BlockEndTurnButton();
-            GameUI.SetPlayerInfo(_currentPlayer);
+            GameUI.BlockAll();
         }
 
         private void Update()
@@ -103,6 +91,28 @@ namespace Game
                     RollDice();
                 }
             }
+        }
+
+        public void SetupGame(int humanPlayers, int aiPlayers)
+        {
+            _players = new List<Player>();
+
+            for (int i = 0; i < humanPlayers; i++)
+            {
+                _players.Add(InstantiatePlayer($"Player {i + 1}"));
+            }
+
+            for (int i = 0; i < aiPlayers; i++)
+            {
+                _players.Add(InstantiateAiPlayer($"AI {i + 1}"));
+            }
+
+            _currentPlayerIndex = 0;
+            _currentPlayer = _players[_currentPlayerIndex];
+            GameUI.SetPlayerInfo(_currentPlayer);
+            
+            GameUI.UnblockAll();
+            GameUI.BlockEndTurnButton();
         }
 
         public void RollDice()
@@ -207,5 +217,3 @@ namespace Game
         }
     }
 }
-
-
