@@ -118,11 +118,12 @@ namespace Players
             }
         }
         
-        public void Initialize(string playerName)
+        public void Initialize(string playerName, int money = 1500)
         {
             _board = GameObject.Find("Board").GetComponent<Board.Board>();
+            
             Name = playerName;
-            Money = 1500;
+            Money = money;
             _currentTileIndex = 0;
             _startingTile = _board.GetTile(_currentTileIndex);
             CurrentTile = _startingTile;
@@ -204,7 +205,6 @@ namespace Players
         {
             if (Money < 0 && Properties.Count == 0)
             {
-                GameUI.ShowNotification($"{Name} is bankrupt! Removing from the game.");
                 GameManager.Instance.RemovePlayer(this);
             }
         }

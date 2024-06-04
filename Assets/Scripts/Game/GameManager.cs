@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
 using UI;
 using Players;
 using Properties;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game
 {
@@ -16,7 +17,7 @@ namespace Game
         private Player _currentPlayer;
 
         private bool _isDiceRolled;
-        private bool _isGameOver;
+        private bool _gameHasStarted;
         private bool _isCasinoRoll;
 
         public Dice dice;
@@ -46,16 +47,43 @@ namespace Game
 
             dice.OnDiceRollComplete = OnDiceRollComplete;
 
-            _isGameOver = false;
+            _gameHasStarted = false;
             _isDiceRolled = false;
             _isCasinoRoll = false;
+        }
+        
+        public void SetupGame(int humanPlayers, int aiPlayers)
+        {
+            _players = new List<Player>();
 
-            GameUI.BlockAll();
+            for (int i = 0; i < humanPlayers; i++)
+            {
+                _players.Add(InstantiatePlayer($"Player {i + 1}", 1000000));
+            }
+
+            for (int i = 0; i < aiPlayers; i++)
+            {
+                _players.Add(InstantiateAiPlayer($"AI {i + 1}", 0));
+            }
+
+            _gameHasStarted = true;
+            _currentPlayerIndex = 0;
+            _currentPlayer = _players[_currentPlayerIndex];
+            
+            GameUI.SetPlayerInfo(_currentPlayer);
+            GameUI.UnblockAll();
+            GameUI.BlockEndTurnButton();
+            
+            
+            if (humanPlayers == 0)
+            {
+                RollDice();
+            }
         }
 
         private void Update()
         {
-            if (!_isGameOver)
+            if (_gameHasStarted)
             {
                 if (ConfirmationWindow.IsActive || CasinoUIManager.Instance.IsActive)
                 {
@@ -95,32 +123,9 @@ namespace Game
                     RollDice();
                 }
             }
-        }
-
-        public void SetupGame(int humanPlayers, int aiPlayers)
-        {
-            _players = new List<Player>();
-
-            for (int i = 0; i < humanPlayers; i++)
+            else
             {
-                _players.Add(InstantiatePlayer($"Player {i + 1}"));
-            }
-
-            for (int i = 0; i < aiPlayers; i++)
-            {
-                _players.Add(InstantiateAiPlayer($"AI {i + 1}"));
-            }
-
-            _currentPlayerIndex = 0;
-            _currentPlayer = _players[_currentPlayerIndex];
-            GameUI.SetPlayerInfo(_currentPlayer);
-            
-            GameUI.UnblockAll();
-            GameUI.BlockEndTurnButton();
-            
-            if (humanPlayers == 0)
-            {
-                RollDice();
+                GameUI.BlockAll();
             }
         }
 
@@ -129,7 +134,6 @@ namespace Game
             if (!_isDiceRolled)
             {
                 _isCasinoRoll = false;
-                _isDiceRolled = true;
                 dice.RollTheDice();
             }
         }
@@ -142,12 +146,14 @@ namespace Game
 
         private void OnDiceRollComplete()
         {
+            _isDiceRolled = true;
+            
             if (_isCasinoRoll)
             {
                 CasinoUIManager.Instance.HandleCasinoRollComplete();
                 return;
             }
-
+            
             _currentPlayer.HandleOnDiceCompleted();
             _currentPlayer.HandleBankruptcy();
             
@@ -184,12 +190,13 @@ namespace Game
             // remove the player from the list
             _players.Remove(player);
             Destroy(player.gameObject);
+            
+            GameUI.ShowNotification($"{player.Name} is bankrupt! Removing from the game.");
 
             // check if the game is over
             if (_players.Count == 1)
             {
-                _isGameOver = true;
-                GameUI.ShowNotification($"{_players[0].Name} wins the game!");
+                GameUI.ShowNotification($"{_players[0].Name} wins the game! You can continue to play or restart the game.");
                 GameUI.BlockRollButton();
                 GameUI.BlockEndTurnButton();
                 return;
@@ -209,19 +216,21 @@ namespace Game
         }
         
         // instantiates a player prefab and initializes it
-        private Player InstantiatePlayer(string playerName)
+        // todo -- delete
+        private Player InstantiatePlayer(string playerName, int money = 1500)
         {
             GameObject playerObj = Instantiate(playerPrefab);
             Player player = playerObj.GetComponent<Player>();
-            player.Initialize(playerName);
+            player.Initialize(playerName, money);
             return player;
         }
         
-        private Player InstantiateAiPlayer(string playerName)
+        // todo -- delete
+        private Player InstantiateAiPlayer(string playerName, int money = 1500)
         {
             GameObject playerObj = Instantiate(playerPrefab); // Instantiate the prefab
             AiPlayer aiPlayer = playerObj.AddComponent<AiPlayer>();
-            aiPlayer.Initialize(playerName);
+            aiPlayer.Initialize(playerName, money);
             return aiPlayer;
         }
         
@@ -238,6 +247,7 @@ namespace Game
                 Destroy(player.gameObject);
             }
 
+            dice.ResetDice();
             _players.Clear();
 
             // hide game UI elements
@@ -246,7 +256,7 @@ namespace Game
             // show player selection panel
             playerSelectionPanel.GetComponent<PlayerSelectionManager>().ShowSelectionPanel();
 
-            _isGameOver = false;
+            _gameHasStarted = false;
             _isDiceRolled = false;
             _isCasinoRoll = false;
         }

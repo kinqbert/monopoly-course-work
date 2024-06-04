@@ -19,12 +19,15 @@ namespace Game
 
         private static readonly System.Random Random = new ();
         
-        public Action OnDiceRollComplete; // Add this action
+        public Action OnDiceRollComplete;
 
         void Start() {
             // saving references to the dice images
             _diceImage1 = GameObject.Find("Dice-Image-1").GetComponent<Image>();
             _diceImage2 = GameObject.Find("Dice-Image-2").GetComponent<Image>();
+            
+            _diceImage1.sprite = diceImages[0];
+            _diceImage2.sprite = diceImages[0];
         }
 
         public void RollTheDice() {
@@ -53,8 +56,8 @@ namespace Game
             }
 
             _currentValues = RollDiceInts(); // getting final value of the dice roll
-            _diceImage1.sprite = diceImages[_currentValues[0] - 1]; // setting the final dice image 1
-            _diceImage2.sprite = diceImages[_currentValues[1] - 1];
+            _diceImage1.sprite = diceImages[_currentValues[0]]; // setting the final dice image 1
+            _diceImage2.sprite = diceImages[_currentValues[1]];
 
             _doneRolling = true;
             GameUI.UnblockRollButton(); // enabling the Roll button again
@@ -97,6 +100,11 @@ namespace Game
         
         public void ResetDice() {
             _isFirstRoll = true;
+            
+            _currentValues = new [] { 0, 0 };
+            
+            _diceImage1.sprite = diceImages[0];
+            _diceImage2.sprite = diceImages[0];
         }
     }
 }

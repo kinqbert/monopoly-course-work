@@ -9,6 +9,7 @@ namespace UI
         private static readonly Button RollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>();
         private static readonly Button EndTurnButton = GameObject.Find("End-Turn-Button").GetComponent<Button>();
         private static readonly Button OpenPropertyListButton = GameObject.Find("Open-Property-List-Button").GetComponent<Button>();
+        private static readonly Button RestartGameButton = GameObject.Find("Restart-Button").GetComponent<Button>();
         private static readonly PlayerInfoPanel PlayerInfoPanel = GameObject.Find("Player-Info-Panel").GetComponent<PlayerInfoPanel>();
 
         public static void YesNoWindow(string message, System.Action onYes, System.Action onNo)
@@ -50,6 +51,7 @@ namespace UI
             RollButton.interactable = false;
             EndTurnButton.interactable = false;
             OpenPropertyListButton.interactable = false;
+            RestartGameButton.interactable = false;
         }
         
         public static void UnblockAll()
@@ -57,6 +59,7 @@ namespace UI
             RollButton.interactable = true;
             EndTurnButton.interactable = true;
             OpenPropertyListButton.interactable = true;
+            RestartGameButton.interactable = true;
         }
         
         public static void ShowNotification(string message)
