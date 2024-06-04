@@ -36,50 +36,50 @@ namespace Board
             _fields = new List<Field>();
 
             // Starting point
-            _fields.Add(new NeutralField("Start"));
+            _fields.Add(new NeutralField("Start")); // 1
 
             // First side: 6 cities, 2 bonus fields
-            _fields.Add(new PropertyField("Night City", 100));
-            _fields.Add(new BonusField("Bonus", 50));
-            _fields.Add(new PropertyField("Raccoon City", 120));
-            _fields.Add(new PropertyField("Silent Hill", 140));
-            _fields.Add(new PropertyField("King's Landing", 160));
-            _fields.Add(new BonusField("Bonus", -50));
-            _fields.Add(new PropertyField("Gotham City", 180));
-            _fields.Add(new PropertyField("Araxis", 200));
+            _fields.Add(new PropertyField("Night City", 100)); // 2
+            _fields.Add(new BonusField("Bonus", 50)); // 3
+            _fields.Add(new PropertyField("Raccoon City", 120)); // 4
+            _fields.Add(new PropertyField("Silent Hill", 140)); // 5
+            _fields.Add(new PropertyField("King's Landing", 160)); // 6
+            _fields.Add(new BonusField("Bonus", -50)); // 7
+            _fields.Add(new PropertyField("Gotham City", 180)); // 8
+            _fields.Add(new PropertyField("Araxis", 200)); // 9
 
             // Corner
-            _fields.Add(new JailField("Jail"));
+            _fields.Add(new JailField("Jail")); // 10
 
             // Second side: 6 cities, 2 bonus fields
-            _fields.Add(new PropertyField("Albuquerque", 220));
-            _fields.Add(new BonusField("Bonus", 100));
-            _fields.Add(new PropertyField("Whiterun", 240));
-            _fields.Add(new PropertyField("Velen", 260));
-            _fields.Add(new PropertyField("Walls of Paradis", 280));
-            _fields.Add(new BonusField("Bonus", -100));
-            _fields.Add(new PropertyField("Los Santos", 300));
-            _fields.Add(new PropertyField("San Andreas", 320));
+            _fields.Add(new PropertyField("Albuquerque", 220)); // 11
+            _fields.Add(new BonusField("Bonus", 100)); // 12
+            _fields.Add(new PropertyField("Whiterun", 240)); // 13
+            _fields.Add(new PropertyField("Velen", 260)); // 14
+            _fields.Add(new PropertyField("Walls of Paradis", 280)); // 15
+            _fields.Add(new BonusField("Bonus", -100)); // 16
+            _fields.Add(new PropertyField("Los Santos", 300)); // 17
+            _fields.Add(new PropertyField("San Andreas", 320)); // 18
 
             // Corner
-            _fields.Add(new CasinoField("Casino"));
+            _fields.Add(new CasinoField("Casino")); // 19
 
             // Third side: 6 cities, 2 bonus fields
-            _fields.Add(new PropertyField("Blackwater", 340));
-            _fields.Add(new BonusField("Bonus", 150));
-            _fields.Add(new PropertyField("Liberty City", 360));
-            _fields.Add(new PropertyField("Dunwall", 380));
-            _fields.Add(new PropertyField("Novigrad", 400));
-            _fields.Add(new BonusField("Bonus", -150));
-            _fields.Add(new PropertyField("Dimetrescu's Castle", 420));
-            _fields.Add(new PropertyField("Vice City", 440));
+            _fields.Add(new PropertyField("Blackwater", 340)); // 20
+            _fields.Add(new BonusField("Bonus", 150)); // 21
+            _fields.Add(new PropertyField("Liberty City", 360)); // 22
+            _fields.Add(new PropertyField("Dunwall", 380)); // 23
+            _fields.Add(new PropertyField("Novigrad", 400)); // 24
+            _fields.Add(new BonusField("Bonus", -150)); // 25
+            _fields.Add(new PropertyField("Dimetrescu's Castle", 420)); // 26
+            _fields.Add(new PropertyField("Vice City", 440)); // 27
 
             // Corner
-            _fields.Add(new TaxField("Tax Field"));
+            _fields.Add(new TaxField("Tax Field")); // 28
 
             // Fourth side: 6 cities, 2 bonus fields
-            _fields.Add(new PropertyField("Baldur's Gate", 460));
-            _fields.Add(new BonusField("Bonus", 200));
+            _fields.Add(new PropertyField("Baldur's Gate", 460)); // 29
+            _fields.Add(new BonusField("Bonus", 200)); // 30
             _fields.Add(new PropertyField("New Vegas", 480));
             _fields.Add(new PropertyField("Black Mesa", 500));
             _fields.Add(new PropertyField("Anor Londo", 520));
