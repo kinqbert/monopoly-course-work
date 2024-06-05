@@ -24,7 +24,10 @@ namespace Game
         public Button rollButton;
         public Button endTurnButton;
         public Button restartButton;
-        public GameObject playerPrefab;
+        public GameObject player1Prefab;
+        public GameObject player2Prefab;
+        public GameObject player3Prefab;
+        public GameObject player4Prefab;
         public GameObject playerSelectionPanel; // Add this field
 
         private void Awake()
@@ -58,28 +61,24 @@ namespace Game
 
             for (int i = 0; i < humanPlayers; i++)
             {
-                _players.Add(InstantiatePlayer($"Player {i + 1}"));
+                _players.Add(InstantiatePlayer(i, $"Player {i + 1}"));
             }
 
             for (int i = 0; i < aiPlayers; i++)
             {
-                _players.Add(InstantiateAiPlayer($"AI {i + 1}"));
+                _players.Add(InstantiateAiPlayer(i, $"AI {i + 1}"));
             }
 
             _gameHasStarted = true;
             _currentPlayerIndex = 0;
             _currentPlayer = _players[_currentPlayerIndex];
-            
             GameUI.SetPlayerInfo(_currentPlayer);
+    
             GameUI.UnblockAll();
             GameUI.BlockEndTurnButton();
-            
-            
-            if (humanPlayers == 0)
-            {
-                RollDice();
-            }
         }
+
+
 
         private void Update()
         {
@@ -216,21 +215,59 @@ namespace Game
         }
         
         // instantiates a player prefab and initializes it
-        private Player InstantiatePlayer(string playerName)
+        private Player InstantiatePlayer(int playerIndex, string playerName)
         {
-            GameObject playerObj = Instantiate(playerPrefab);
+            GameObject playerObj;
+            switch (playerIndex)
+            {
+                case 0:
+                    playerObj = Instantiate(player1Prefab);
+                    break;
+                case 1:
+                    playerObj = Instantiate(player2Prefab);
+                    break;
+                case 2:
+                    playerObj = Instantiate(player3Prefab);
+                    break;
+                case 3:
+                    playerObj = Instantiate(player4Prefab);
+                    break;
+                default:
+                    playerObj = Instantiate(player1Prefab);
+                    break;
+            }
             Player player = playerObj.GetComponent<Player>();
             player.Initialize(playerName);
             return player;
         }
+
         
-        private Player InstantiateAiPlayer(string playerName)
+        private Player InstantiateAiPlayer(int playerIndex, string playerName)
         {
-            GameObject playerObj = Instantiate(playerPrefab); // Instantiate the prefab
+            GameObject playerObj;
+            switch (playerIndex)
+            {
+                case 0:
+                    playerObj = Instantiate(player1Prefab);
+                    break;
+                case 1:
+                    playerObj = Instantiate(player2Prefab);
+                    break;
+                case 2:
+                    playerObj = Instantiate(player3Prefab);
+                    break;
+                case 3:
+                    playerObj = Instantiate(player4Prefab);
+                    break;
+                default:
+                    playerObj = Instantiate(player1Prefab);
+                    break;
+            }
             AiPlayer aiPlayer = playerObj.AddComponent<AiPlayer>();
             aiPlayer.Initialize(playerName);
             return aiPlayer;
         }
+
         
         private void RestartGame()
         {

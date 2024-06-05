@@ -12182,7 +12182,10 @@ MonoBehaviour:
   rollButton: {fileID: 2038538340}
   endTurnButton: {fileID: 872140097}
   restartButton: {fileID: 1080386706}
-  playerPrefab: {fileID: 4066768208386240278, guid: de15c5cf0cf41c244bd4cec886c237c3, type: 3}
+  player1Prefab: {fileID: 4066768208386240278, guid: de15c5cf0cf41c244bd4cec886c237c3, type: 3}
+  player2Prefab: {fileID: 4066768208386240278, guid: 25d7a873a0f4ffc488e6b0fce94b9c08, type: 3}
+  player3Prefab: {fileID: 4066768208386240278, guid: 3ca0bfd46dfe6eb4c9a054dae7d107cf, type: 3}
+  player4Prefab: {fileID: 4066768208386240278, guid: 1e5182b70eba6d04387a56d16ccdbcd7, type: 3}
   playerSelectionPanel: {fileID: 744767846}
 --- !u!4 &1779381399
 Transform:
