@@ -80,12 +80,12 @@ namespace Board
             // Fourth side: 6 cities, 2 bonus fields
             _fields.Add(new PropertyField("Baldur's Gate", 460)); // 29
             _fields.Add(new BonusField("Bonus", 200)); // 30
-            _fields.Add(new PropertyField("New Vegas", 480));
-            _fields.Add(new PropertyField("Black Mesa", 500));
-            _fields.Add(new PropertyField("Anor Londo", 520));
-            _fields.Add(new BonusField("Bonus", -200));
-            _fields.Add(new PropertyField("Erangel", 540)); 
-            _fields.Add(new PropertyField("Saint Denis", 560)); 
+            _fields.Add(new PropertyField("New Vegas", 480)); // 31
+            _fields.Add(new PropertyField("Black Mesa", 500)); // 32
+            _fields.Add(new PropertyField("Anor Londo", 520)); // 33
+            _fields.Add(new BonusField("Bonus", -200)); // 34
+            _fields.Add(new PropertyField("Erangel", 540)); // 35
+            _fields.Add(new PropertyField("Saint Denis", 560)); // 36
         }
 
         private void BindFieldsToTiles()

@@ -58,12 +58,12 @@ namespace Game
 
             for (int i = 0; i < humanPlayers; i++)
             {
-                _players.Add(InstantiatePlayer($"Player {i + 1}", 1000000));
+                _players.Add(InstantiatePlayer($"Player {i + 1}"));
             }
 
             for (int i = 0; i < aiPlayers; i++)
             {
-                _players.Add(InstantiateAiPlayer($"AI {i + 1}", 0));
+                _players.Add(InstantiateAiPlayer($"AI {i + 1}"));
             }
 
             _gameHasStarted = true;
@@ -216,21 +216,19 @@ namespace Game
         }
         
         // instantiates a player prefab and initializes it
-        // todo -- delete
-        private Player InstantiatePlayer(string playerName, int money = 1500)
+        private Player InstantiatePlayer(string playerName)
         {
             GameObject playerObj = Instantiate(playerPrefab);
             Player player = playerObj.GetComponent<Player>();
-            player.Initialize(playerName, money);
+            player.Initialize(playerName);
             return player;
         }
         
-        // todo -- delete
-        private Player InstantiateAiPlayer(string playerName, int money = 1500)
+        private Player InstantiateAiPlayer(string playerName)
         {
             GameObject playerObj = Instantiate(playerPrefab); // Instantiate the prefab
             AiPlayer aiPlayer = playerObj.AddComponent<AiPlayer>();
-            aiPlayer.Initialize(playerName, money);
+            aiPlayer.Initialize(playerName);
             return aiPlayer;
         }
         
