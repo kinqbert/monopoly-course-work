@@ -12,23 +12,29 @@ namespace Game
     {
         public static GameManager Instance;
 
-        private List<Player> _players;
-        private int _currentPlayerIndex;
-        private Player _currentPlayer;
+        private List<Player> _players; // list of players in the game
+        private int _currentPlayerIndex;  
+        private Player _currentPlayer; 
 
         private bool _isDiceRolled;
-        private bool _gameHasStarted;
-        private bool _isCasinoRoll;
+        private bool _gameHasStarted; 
+        private bool _isCasinoRoll; // variable to check if the dice roll is for the casino, if it is then player isn't moving
 
-        public Dice dice;
+        public Dice dice; // Reference to the dice object
+        
+        // button references
         public Button rollButton;
         public Button endTurnButton;
         public Button restartButton;
+        
+        // player prefabs to make different players have different models
         public GameObject player1Prefab;
         public GameObject player2Prefab;
         public GameObject player3Prefab;
         public GameObject player4Prefab;
-        public GameObject playerSelectionPanel; // Add this field
+        
+        // reference to the player selection panel
+        public GameObject playerSelectionPanel;
 
         private void Awake()
         {
@@ -41,13 +47,15 @@ namespace Game
                 Destroy(gameObject);
             }
         }
-
+        
         private void Start()
         {
+            // adding listeners to the buttons
             rollButton.onClick.AddListener(RollDice);
             endTurnButton.onClick.AddListener(EndTurn);
             restartButton.onClick.AddListener(RestartGame);
 
+            // assigning function to be called when the dice roll is complete
             dice.OnDiceRollComplete = OnDiceRollComplete;
 
             _gameHasStarted = false;
@@ -55,6 +63,7 @@ namespace Game
             _isCasinoRoll = false;
         }
         
+        // sets up the game with the given number of human and AI players
         public void SetupGame(int humanPlayers, int aiPlayers)
         {
             _players = new List<Player>();
@@ -72,16 +81,13 @@ namespace Game
             _gameHasStarted = true;
             _currentPlayerIndex = 0;
             _currentPlayer = _players[_currentPlayerIndex];
+            
             GameUI.SetPlayerInfo(_currentPlayer);
-    
-            GameUI.UnblockAll();
-            GameUI.BlockEndTurnButton();
         }
-
-
 
         private void Update()
         {
+            // block diffrent UI elements based on the game state
             if (_gameHasStarted)
             {
                 if (ConfirmationWindow.IsActive || CasinoUIManager.Instance.IsActive)
@@ -128,6 +134,7 @@ namespace Game
             }
         }
 
+        // method to roll the dice
         public void RollDice()
         {
             if (!_isDiceRolled)
@@ -137,26 +144,36 @@ namespace Game
             }
         }
 
+        // method to roll the dice for the casino, it won't move player
         public void RollDiceForCasino()
         {
             _isCasinoRoll = true;
             dice.RollTheDice();
         }
 
+        // method to be called when the dice roll is complete (passed into dice class in Start function)
         private void OnDiceRollComplete()
         {
             _isDiceRolled = true;
             
+            // if the dice roll is for the casino, give or take money from the player
             if (_isCasinoRoll)
             {
                 CasinoUIManager.Instance.HandleCasinoRollComplete();
                 return;
             }
             
-            _currentPlayer.HandleOnDiceCompleted();
-            _currentPlayer.HandleBankruptcy();
             
+            _currentPlayer.HandleOnDiceCompleted(); // move the player and handle the tile they landed on if needed or reduce jail turns
+            
+            // update the player info on the UI
             GameUI.UpdatePlayerInfo();
+            
+            // check if the player is bankrupt
+            if (_currentPlayer.IsBankrupt())
+            {
+                RemovePlayer(_currentPlayer);
+            } 
         }
         
         public void EndTurn()
@@ -164,6 +181,8 @@ namespace Game
             _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
             _currentPlayer = _players[_currentPlayerIndex];
             _isDiceRolled = false;
+            
+            // set new player info on the UI
             GameUI.SetPlayerInfo(_currentPlayer);
             
             if (_currentPlayer is AiPlayer)
@@ -201,7 +220,7 @@ namespace Game
                 return;
             }
 
-            // if the current player is the one being removed, move to the next player
+            // just in case if the current player is the one being removed, move to the next player
             if (_currentPlayer == player)
             {
                 EndTurn();
@@ -218,6 +237,8 @@ namespace Game
         private Player InstantiatePlayer(int playerIndex, string playerName)
         {
             GameObject playerObj;
+            
+            // instantiate the player prefab (model) based on the player index
             switch (playerIndex)
             {
                 case 0:
@@ -236,15 +257,18 @@ namespace Game
                     playerObj = Instantiate(player1Prefab);
                     break;
             }
+            // add the player script to the player object and initialize it
             Player player = playerObj.GetComponent<Player>();
             player.Initialize(playerName);
+            
             return player;
         }
 
-        
+        // same as InstantiatePlayer but for AI players
         private Player InstantiateAiPlayer(int playerIndex, string playerName)
         {
             GameObject playerObj;
+            
             switch (playerIndex)
             {
                 case 0:
@@ -263,12 +287,14 @@ namespace Game
                     playerObj = Instantiate(player1Prefab);
                     break;
             }
+            
             AiPlayer aiPlayer = playerObj.AddComponent<AiPlayer>();
             aiPlayer.Initialize(playerName);
+            
             return aiPlayer;
         }
 
-        
+        // method to restart the game
         private void RestartGame()
         {
             // Reset properties and players
@@ -282,11 +308,9 @@ namespace Game
                 Destroy(player.gameObject);
             }
 
+            // reset the dice and players list
             dice.ResetDice();
             _players.Clear();
-
-            // hide game UI elements
-            GameUI.BlockAll();
 
             // show player selection panel
             playerSelectionPanel.GetComponent<PlayerSelectionManager>().ShowSelectionPanel();

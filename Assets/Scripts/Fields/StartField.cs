@@ -2,11 +2,11 @@ using Players;
 
 namespace Fields
 {
-    public class NeutralField : Field
+    public class StartField : Field
     {
         public string FieldName { get; }
         
-        public NeutralField(string name)
+        public StartField(string name)
         {
             FieldName = name;
         }

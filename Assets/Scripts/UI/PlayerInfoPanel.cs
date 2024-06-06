@@ -4,6 +4,7 @@ using TMPro;
 
 namespace UI
 {
+    // this class is responsible for displaying player info in the UI
     public class PlayerInfoPanel : MonoBehaviour
     {
         public TextMeshProUGUI playerNameText;

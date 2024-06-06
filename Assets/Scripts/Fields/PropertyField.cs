@@ -6,18 +6,18 @@ namespace Fields
 {
     public class PropertyField : Field
     {
-        public string Name;
+        public string FieldName;
         public Property Property { get; }
         
-        public PropertyField(string name, int cost)
+        public PropertyField(string fieldName, int cost)
         {
-            Name = name;
-            Property = new Property(name, cost);
+            FieldName = fieldName;
+            Property = new Property(fieldName, cost);
         }
         
         public PropertyField(Property property)
         {
-            Name = property.Name;
+            FieldName = property.Name;
             Property = property;
         }
         
@@ -60,7 +60,7 @@ namespace Fields
             }
             else
             {
-                GameUI.ShowNotification($"{player.Name} doesn't have enough money to buy {Name}.");
+                GameUI.ShowNotification($"{player.Name} doesn't have enough money to buy {FieldName}.");
             }
         }
     }

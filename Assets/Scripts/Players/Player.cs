@@ -14,19 +14,21 @@ namespace Players
         public string Name { get; private set; }
         public int Money { get; private set; }
         public List<Property> Properties;
-        private Tile _startingTile;
+        public bool IsInJail { get; private set; }
+        
+        protected int JailTurns { get; private set; }
         protected Tile CurrentTile { get; private set; }
+        
+        private Tile _startingTile;
         private int _currentTileIndex;
         private Board.Board _board;
         
+        // variables for animation
         private Vector3 _velocity = Vector3.zero;
         private const float LiftTime = 0.2f;
         private const float SmoothTime = 0.25f;
         private const float LiftHeight = 1f;
         private const float OffsetRadius = 0.2f;
-        
-        public bool IsInJail { get; private set; }
-        protected int JailTurns { get; private set; }
         
         public void ModifyMoney(int amount)
         {
@@ -35,23 +37,37 @@ namespace Players
 
         public void AddProperty(Property property)
         {
+            // money chaning logic is handled in Property.BuyProperty
             Properties.Add(property);
         }
 
         public void RemoveProperty(Property property)
         {
+            // money chaning logic is handled in Property.BuyProperty
             Properties.Remove(property);
         }
 
         protected void Move(int steps)
         {
-            int finalTileIndex = (_currentTileIndex + steps) % Board.Board.CellsCount;
+            int finalTileIndex = (_currentTileIndex + steps);
+            
+            // if the player completes a game circle, collect $300
+            if (finalTileIndex >= Board.Board.CellsCount)
+            {
+                finalTileIndex %= Board.Board.CellsCount;
+                ModifyMoney(300);
+                GameUI.ShowNotification($"{Name} completed game circle and collected $200.");
+            }
+            
             Tile finalTile = _board.GetTile(finalTileIndex);
+            
             _currentTileIndex = finalTileIndex;
             CurrentTile = finalTile;
+            
             StartCoroutine(MoveToTile(finalTile));
         }
 
+        // JAIL FUNCTIONS
         public void SendToJail(int turns)
         {
             IsInJail = true;
@@ -73,6 +89,7 @@ namespace Players
             }
         }
         
+        // handlers
         public virtual void HandleOnDiceCompleted()
         {
             if (IsInJail)
@@ -121,14 +138,26 @@ namespace Players
         public void Initialize(string playerName, int money = 1500)
         {
             _board = GameObject.Find("Board").GetComponent<Board.Board>();
+            _currentTileIndex = 0;
+            _startingTile = _board.GetTile(_currentTileIndex);
             
             Name = playerName;
             Money = money;
-            _currentTileIndex = 0;
-            _startingTile = _board.GetTile(_currentTileIndex);
+            
             CurrentTile = _startingTile;
             transform.position = ApplyCircularOffset(_startingTile);
+
             Properties = new List<Property>();
+        }
+        
+        public bool IsBankrupt()
+        {
+            if (Money < 0 && Properties.Count == 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         // ANIMATION FUNCTIONS
@@ -183,6 +212,7 @@ namespace Players
             transform.position = target;
         }
 
+        // don't even ask what kind of quantum physics is happening here 
         private Vector3 ApplyCircularOffset(Tile tile)
         {
             Vector3 offset = Vector3.zero;
@@ -199,14 +229,6 @@ namespace Players
             offset.x = Mathf.Cos(angle) * OffsetRadius;
             offset.z = Mathf.Sin(angle) * OffsetRadius;
             return tile.transform.position + offset;
-        }
-
-        public void HandleBankruptcy()
-        {
-            if (Money < 0 && Properties.Count == 0)
-            {
-                GameManager.Instance.RemovePlayer(this);
-            }
         }
     }
 }

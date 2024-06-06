@@ -1,5 +1,5 @@
-using Players;
 using UI;
+using Players;
 
 namespace Fields
 {
@@ -7,13 +7,14 @@ namespace Fields
     {
         private const int PropertyTax = 60;
         private const int UpgradeTax = 10;
-        public string Name { get; }
+        public string FieldName { get; }
 
-        public TaxField(string name)
+        public TaxField(string fieldName)
         {
-            Name = name;
+            FieldName = fieldName;
         }
 
+        // 60 dollars for each owned property and 10 dollars for each upgrade level
         public override void OnPlayerLanded(Player player)
         {
             int totalTax = 0;

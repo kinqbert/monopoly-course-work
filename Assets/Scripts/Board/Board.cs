@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using Fields;
-using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine;
+
+using Fields;
 
 namespace Board
 {
@@ -36,7 +37,7 @@ namespace Board
             _fields = new List<Field>();
 
             // Starting point
-            _fields.Add(new NeutralField("Start")); // 1
+            _fields.Add(new StartField("Start")); // 1
 
             // First side: 6 cities, 2 bonus fields
             _fields.Add(new PropertyField("Night City", 100)); // 2

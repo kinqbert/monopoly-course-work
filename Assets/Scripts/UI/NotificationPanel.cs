@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace UI
 {
+    // this class manages the notification panel that displays messages to the player
     public class NotificationPanel : MonoBehaviour
     {
         public static NotificationPanel Instance;
@@ -38,6 +39,7 @@ namespace UI
             StartCoroutine(FadeOutAndDestroy(notification));
         }
 
+        // crazy algoithm ahead
         private IEnumerator FadeOutAndDestroy(GameObject notification)
         {
             CanvasGroup canvasGroup = notification.GetComponent<CanvasGroup>();

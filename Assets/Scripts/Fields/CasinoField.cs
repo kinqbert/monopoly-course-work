@@ -1,15 +1,15 @@
-using Players;
 using UI;
+using Players;
 
 namespace Fields
 {
     public class CasinoField : Field
     {
-        public string Name { get; }
+        public string FieldName { get; }
 
-        public CasinoField(string name)
+        public CasinoField(string fieldName)
         {
-            Name = name;
+            FieldName = fieldName;
         }
 
         public override void OnPlayerLanded(Player player)

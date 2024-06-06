@@ -39,6 +39,7 @@ namespace Players
             DecideToUpgradeProperties();
         }
 
+        // simple AI logic to decide whether to buy a property
         private void DecideToBuyProperty(Property property)
         {
             if (!property.IsOwned && Money >= property.Price + MinimumMoneyToBuyProperty)
@@ -47,6 +48,7 @@ namespace Players
             }
         }
 
+        // same simple AI logic to decide whether to upgrade properties
         private void DecideToUpgradeProperties()
         {
             foreach (var property in Properties)
@@ -71,7 +73,7 @@ namespace Players
             string betType = betTypes[Random.Range(0, betTypes.Length)];
             int betAmount = Random.Range(1, Mathf.Min(Money, 100)); // random bet amount up to $100 or player's balance
 
-            CasinoUIManager.Instance.PlaceBet(this, betType, betAmount);
+            CasinoUIManager.Instance.PlaceBetForAi(this, betType, betAmount);
         }
     }
 }

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    // this class is responsible for managing the property UI
     public class PropertyUIManager : MonoBehaviour
     {
         public static PropertyUIManager Instance;
@@ -46,13 +47,13 @@ namespace UI
 
         private void PopulatePropertyList()
         {
-            // Clear existing items
+            // clear existing items
             foreach (Transform child in propertyListContent)
             {
                 Destroy(child.gameObject);
             }
 
-            // Add new items
+            // add new items
             Player currentPlayer = GameManager.Instance.GetCurrentPlayer();
             List<Property> properties = currentPlayer.Properties;
 
@@ -70,7 +71,7 @@ namespace UI
                     propertyText.text = $"{property.Name} - Rent: ${property.Rent} - ${property.Price} - Level: {property.UpgradeLevel} - Upgrade Cost: ${property.UpgradeCost}";
                 }
 
-                // Find the buttons within the instantiated prefab
+                // find the buttons within the instantiated prefab
                 Button upgradeButton = propertyItem.transform.Find("UpgradeButton").GetComponent<Button>();
                 Button sellButton = propertyItem.transform.Find("SellButton").GetComponent<Button>();
 
@@ -82,13 +83,13 @@ namespace UI
         private void UpgradeProperty(Property property)
         {
             property.UpgradeProperty();
-            PopulatePropertyList(); // Refresh the list to reflect changes
+            PopulatePropertyList(); // refresh the list to reflect changes
         }
 
         private void SellProperty(Property property)
         {
             property.SellProperty();
-            PopulatePropertyList(); // Refresh the list to reflect changes
+            PopulatePropertyList(); // refresh the list to reflect changes
         }
     }
 }

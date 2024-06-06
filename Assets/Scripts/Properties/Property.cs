@@ -5,10 +5,10 @@ namespace Properties
 {
     public class Property
     {
-        public string Name { get; }
-        public int Price => _initialPrice + (int)(_initialPrice * 0.25 * (UpgradeLevel - 1)); // Dynamic price calculation
-        public int UpgradeLevel { get; private set; }
+        public string Name { get; } 
+        public int UpgradeLevel { get; private set; } // 1-5
         public bool IsOwned => _owner != null;
+        public int Price => _initialPrice + (int)(_initialPrice * 0.25 * (UpgradeLevel - 1)); // dynamic price calculation, some crazy math here
         public int UpgradeCost => _initialPrice / 10 + UpgradeLevel * 50;
         public int Rent => _initialPrice / 10 * UpgradeLevel;
 
@@ -18,7 +18,8 @@ namespace Properties
         public Property(string name, int price)
         {
             Name = name;
-            UpgradeLevel = 1; // Start with level 1
+            UpgradeLevel = 1; // start with level 1, not 0
+            
             _initialPrice = price;
             _owner = null;
         }
@@ -67,10 +68,9 @@ namespace Properties
         {
             if (IsOwned && _owner != player)
             {
-                int rentToPay = Rent + (UpgradeLevel * 10); // Example rent formula
-                player.ModifyMoney(-rentToPay);
-                _owner.ModifyMoney(rentToPay);
-                GameUI.ShowNotification($"{player.Name} paid {rentToPay} rent to {_owner.Name} for {Name}.");
+                player.ModifyMoney(-Rent);
+                _owner.ModifyMoney(Rent);
+                GameUI.ShowNotification($"{player.Name} paid {Rent} rent to {_owner.Name} for {Name}.");
             }
         }
         
@@ -79,6 +79,5 @@ namespace Properties
             UpgradeLevel = 1;
             _owner = null;
         }
-
     }
 }

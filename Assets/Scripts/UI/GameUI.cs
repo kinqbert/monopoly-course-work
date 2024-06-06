@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    // this class is responsible for managing all of the game UI
     public class GameUI
     {
+        // all of the needed buttons and panels in the game
         private static readonly Button RollButton = GameObject.Find("Roll-Dice-Button").GetComponent<Button>();
         private static readonly Button EndTurnButton = GameObject.Find("End-Turn-Button").GetComponent<Button>();
         private static readonly Button OpenPropertyListButton = GameObject.Find("Open-Property-List-Button").GetComponent<Button>();

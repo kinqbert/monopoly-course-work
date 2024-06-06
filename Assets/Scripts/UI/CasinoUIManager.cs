@@ -1,12 +1,14 @@
 using System.Collections;
-using Game;
-using Players;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Game;
+using Players;
+
 namespace UI
 {
+    // this class is responsible for managing the casino UI
     public class CasinoUIManager : MonoBehaviour
     {
         public static CasinoUIManager Instance;
@@ -80,8 +82,8 @@ namespace UI
                 resultText.text = "Invalid bet amount.";
             }
         }
-
-        public void PlaceBet(Player player, string betType, int betAmount)
+        
+        public void PlaceBetForAi(Player player, string betType, int betAmount)
         {
             _currentPlayer = player;
             _betsPlaced = true;
@@ -94,7 +96,7 @@ namespace UI
 
                 GameUI.UpdatePlayerInfo();
 
-                // Roll the dice and wait for the animation to complete
+                // roll the dice and wait for the animation to complete
                 GameManager.Instance.RollDiceForCasino();
 
                 if (!(player is AiPlayer))
@@ -113,7 +115,7 @@ namespace UI
 
         public void HandleCasinoRollComplete()
         {
-            // had to add this check to prevent multiple calls because of some weird Unity bug
+            // had to add this check to prevent multiple calls because of some weird Unity bug with coroutines
             if (!_betsPlaced) return;
             
             int diceRoll1 = dice.GetCurrentValues()[0];
@@ -162,6 +164,7 @@ namespace UI
 
             _betsPlaced = false;
             resultText.text = resultMessage;
+            
             GameUI.UpdatePlayerInfo();
         }
 

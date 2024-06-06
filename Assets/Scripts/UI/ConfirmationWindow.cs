@@ -4,14 +4,17 @@ using TMPro;
 
 namespace UI
 {
+    // this class manages the confirmation window that asks the player to confirm an action
     public class ConfirmationWindow : MonoBehaviour
     {
         public static ConfirmationWindow Instance;
         public static bool IsActive { get; private set; }
 
         public TextMeshProUGUI messageText; // reference to the text component that displays the message
-        public Button yesButton; // reference to the button that confirms the action
-        public Button noButton; // reference to the button that cancels the action
+        
+        // references to the buttons that confirm and cancel the action respectively
+        public Button yesButton; 
+        public Button noButton;
 
         private void Awake()
         {
@@ -27,12 +30,7 @@ namespace UI
             gameObject.SetActive(false); // initially hide the confirmation window
         }
 
-        /// <summary>
-        /// Shows the confirmation window with the specified message and actions for yes and no.
-        /// </summary>
-        /// <param name="message">Message to be shown</param>
-        /// <param name="onYes">Function to be completed on confirm</param>
-        /// <param name="onNo">Function to be completed on cancel</param>
+        // shows the confirmation window with the specified message and actions for yes and no.
         public void Show(string message, System.Action onYes, System.Action onNo)
         {
             IsActive = true;

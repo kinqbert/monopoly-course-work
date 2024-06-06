@@ -1,16 +1,16 @@
-using Players;
 using UI;
+using Players;
 
 namespace Fields
 {
     public class JailField : Field
     {
         private const int JailTurns = 3;
-        public string Name { get; }
+        public string FieldName { get; }
 
-        public JailField(string name)
+        public JailField(string fieldName)
         {
-            Name = name;
+            FieldName = fieldName;
         }
 
         public override void OnPlayerLanded(Player player)

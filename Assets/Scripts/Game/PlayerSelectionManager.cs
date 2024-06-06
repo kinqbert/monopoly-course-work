@@ -7,9 +7,10 @@ namespace Game
 {
     public class PlayerSelectionManager : MonoBehaviour
     {
-        public GameObject selectionPanel; // Reference to the panel
-        public TextMeshProUGUI messageText;
-        public TMP_Dropdown humanPlayersDropdown;
+        // references to different UI elements, set in the inspector
+        public GameObject selectionPanel; 
+        public TextMeshProUGUI messageText; 
+        public TMP_Dropdown humanPlayersDropdown; 
         public TMP_Dropdown aiPlayersDropdown;
         public Button startButton;
 
@@ -23,11 +24,12 @@ namespace Game
         {
             int humanPlayers = humanPlayersDropdown.value;
             int aiPlayers = aiPlayersDropdown.value;
-
+            
+            // game supports from 2 to 4 players, but it is easy to increase, it'll just be messy to rework animations
             if (humanPlayers + aiPlayers <= 4 && humanPlayers + aiPlayers >= 2)
             {
                 GameManager.Instance.SetupGame(humanPlayers, aiPlayers);
-                selectionPanel.SetActive(false); // Hide the panel
+                selectionPanel.SetActive(false); // hide the panel
             }
             else if (humanPlayers == 0)
             {
@@ -45,7 +47,6 @@ namespace Game
 
         public void ShowSelectionPanel()
         {
-            GameUI.BlockAll();
             selectionPanel.SetActive(true);
             messageText.text = "";
             humanPlayersDropdown.value = 0;

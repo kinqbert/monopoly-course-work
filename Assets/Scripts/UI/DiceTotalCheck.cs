@@ -4,6 +4,7 @@ using TMPro;
 
 namespace UI
 {
+    // this class is responsible for displaying the total of the dice roll
     public class DiceTotalCheck : MonoBehaviour
     {
         private Dice _dice;

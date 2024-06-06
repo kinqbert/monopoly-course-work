@@ -1,5 +1,5 @@
-using Players;
 using UI;
+using Players;
 
 namespace Fields
 {
@@ -19,9 +19,9 @@ namespace Fields
             player.ModifyMoney(_bonusAmount);
             
             if (_bonusAmount > 0)
-                GameUI.ShowNotification($"{player.Name} landed on {FieldName} and got ${_bonusAmount}");
+                GameUI.ShowNotification($"{player.Name} was promoted and got ${_bonusAmount}");
             else
-                GameUI.ShowNotification($"{player.Name} landed on {FieldName} and lost -${-_bonusAmount}");
+                GameUI.ShowNotification($"{player.Name} got taxed and lost -${-_bonusAmount}");
         }
     }
 }
