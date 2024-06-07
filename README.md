@@ -1,6 +1,6 @@
 # Gameplay video:
 
-https://github.com/kinqbert/monopoly-course-work/assets/100777995/e8ba3b51-6c40-41c0-86d3-a1bf6085f632
+https://github.com/kinqbert/monopoly-course-work/assets/100777995/0b3b7c6f-8550-409e-a267-4a5ae8050800
 
 # Player selection screen:
 
