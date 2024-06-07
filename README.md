@@ -1,4 +1,4 @@
-# Gamephay video:
+# Gameplay video:
 
 https://github.com/kinqbert/monopoly-course-work/assets/100777995/e8ba3b51-6c40-41c0-86d3-a1bf6085f632
 
